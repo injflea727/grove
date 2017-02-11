@@ -12,6 +12,13 @@ actually usable out of the box, check out the repo for the
 [MOSS](https://github.com/druidic/MOSS) operating system, which contains
 a Stone image with an OS already installed.
 
+## Installation
+
+It couldn't be easier! Just visit https://druidic.github.io/MOSS.
+When you save your progress, your save file will be downloaded as HTML.
+You can open this file (just double-click it on most systems)
+to start from where you left off.
+
 ## Features and Philosophy
 
 ### Human-Scale Computing
@@ -71,3 +78,64 @@ doesn't mean it can't *produce* more complex software. The
 create fully-featured HTML and JavaScript applications that run in your
 web browser. The Stone is, almost paradoxically, both ascetic and cosmopolitan.
 
+## API Reference
+
+When a Stone system starts up, it tries to run the program defined in the global `main()` function.
+
+```javascript
+function main(state, event) {
+  // ...
+}
+```
+
+This function will be called many times as the system runs. Specifically, it will be called for
+every *event* that occurs in the system. Events can include:
+
+- Keypresses on the keyboard
+- Animation timer events
+- HTTP calls returning or failing
+
+The `main()` function takes two arguments: the `state` of the system and the `event` that occurred.
+It should return a new `state` object, which will be passed back to `main()`, possibly with some changes,
+on the next `event`.
+
+On the first call to `main()`, the event will be `{type: 'boot'}` and the `state` will be an object containing
+only the *system section*, described below.
+
+The state object has a *system section* which is a description
+of the state of the filesystem, screen buffer, keyboard, clock, and random number generator.
+
+```
+{
+  __SYSTEM__: {
+    keyboard: {
+      lastKeyPressed: [number | null],
+      keysHeld: [number]
+    },
+    screen: [
+      [string | [[string | {format: string, text: string}]]]
+    ],
+    clock: Date,
+    random: number,
+    files: {[string]: string}
+  }
+}
+```
+
+### Global functions
+
+```
+http(['get' | 'put' | 'post' | 'patch' | 'delete'], string, {
+  headers: {[string]: string},
+  body: string
+})
+```
+
+```
+{
+  status: ['pending' | 'succeeded' | 'failed'],
+  error: string,
+  statusCode: [number | null],
+  response: string
+}
+```
