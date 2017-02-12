@@ -1,8 +1,10 @@
 # The Stone Virtual PC
 
-The **Stone** is a virtual personal computer that runs in a web browser. 
+The **Stone** is a virtual personal computer that runs in a web browser.
 You can use it to run the [MOSS](https://github.com/druidic/MOSS) operating system.
 It's also possible to write your own operating system or program that runs directly on a Stone.
+
+![Screenshot of a Stone computer running a simple program](screenshot.png)
 
 This repository houses a general-purpose version of the Stone computer
 that has no operating system or other software installed. The intended
@@ -49,7 +51,7 @@ you accidentally make unwanted changes.
 
 The Stone's API encourages you to write your programs in a functional style.
 This means that, whenever feasible, programs are built out of *pure functions*
-that merely transform inputs into outputs. 
+that merely transform inputs into outputs.
 Pure functions have no side effects or dependencies on global state.
 These properties make programs easy to debug, because if a function produces
 unexpected output, the problem must lie either in the inputs to the function
