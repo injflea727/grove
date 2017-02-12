@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Working Title</title>
+    <style type="text/css">
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono.ttf');
+    }
+
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: bold;
+      font-style: normal;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono-Bold.ttf');
+    }
+
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: normal;
+      font-style: oblique;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono-Oblique.ttf');
+    }
+
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: normal;
+      font-style: italic;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono-Oblique.ttf');
+    }
+
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: bold;
+      font-style: oblique;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono-BoldOblique.ttf');
+    }
+
+    @font-face {
+      font-family: DejaVuMono;
+      font-weight: bold;
+      font-style: italic;
+      font-stretch: normal;
+      src: url('fonts/DejaVuSansMono-BoldOblique.ttf');
+    }
+
+    body {
+      margin: 0;
+      background-color: #543;
+      min-height: 100vh;
+      background-image: linear-gradient(to bottom, #bcd 0px, #9ab 550px, #543 550px, #765 1400px);
+    }
+
+    #case {
+      position: relative;
+      display: table; /* element's width stretches to contain its contents */
+      background-color: #aa9;
+      padding: 36px 36px 90px 36px;
+
+      margin-top: 12px;
+      margin-left: auto;
+      margin-right: auto;
+
+      border-radius: 4px;
+      border-top: 4px solid #bba;
+      border-left: 4px solid #bba;
+      border-bottom: 4px solid #998;
+      border-right: 4px solid #998;
+
+      box-shadow: 0 -30px 80px rgba(0,0,0,0.4);
+    }
+
+    #bezel {
+      border-top: 3px solid #998;
+      border-left: 3px solid #998;
+      border-right: 3px solid #bba;
+      border-bottom: 3px solid #bba;
+    }
+
+    #terminal {
+      border: 1px solid; /* hack to get chrome to render border image */
+      border-image-source: url("data:image/png;base64,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");
+      border-image-slice: 19;
+      border-image-width: 10px;
+
+      padding-left: 24px;
+      padding-top: 20px;
+
+      box-sizing: border-box;
+      width: 580px;
+      height: 580px;
+
+      background: #122;
+      background-image:
+        radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 50%),
+        radial-gradient(circle at 50% -100%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.01) 90%);
+
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+      overflow: hidden;
+    }
+
+    #terminal > p {
+      color: #0f0;
+      mix-blend-mode: hard-light;
+      margin: 0;
+      padding: 0;
+      height: 16.8px;
+      width: 532px;
+
+      font-family: DejaVuMono, Menlo, Consolas, monospace;
+      font-size: 13.8px;
+      white-space: pre;
+    }
+
+    #controls {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    #switch {
+      position: absolute;
+      bottom: 30px;
+      left: 36px;
+      cursor: pointer;
+      color: #383838;
+      text-shadow: 0 1px 0 #bba;
+      font-family: DejaVuMono, Menlo, Consolas, monospace;
+      font-size: 12px;
+      display: table;
+
+      padding: 9px;
+      border: 1px solid #776;
+
+      box-shadow: 1px 1px 0 #bba;
+    }
+
+    #switch:active {
+      border: 1px solid #887;
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1);
+    }
+
+    #slot {
+      cursor: pointer;
+      position: absolute;
+      left: 100px;
+      bottom: 42px;
+      width: 320px;
+      background-color: #383838;
+      box-shadow: inset 0 2px 8px #000;
+      border-bottom: 2px solid #bba;
+      border-right: 2px solid #bba;
+      border-top: 2px solid #998;
+      border-left: 2px solid #998;
+      height: 10px;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div id="case">
+      <div id="bezel">
+        <div id="terminal">
+          <p id="l0">If you can read this, your browser is not recent enough to run</p>
+          <p id="l1">a Stone computer :(</p>
+          <p id="l2"></p>
+          <p id="l3">Please upgrade to the latest version of Google Chrome.</p>
+          <p id="l4"></p>
+          <p id="l5"></p>
+          <p id="l6"></p>
+          <p id="l7"></p>
+          <p id="l8"></p>
+          <p id="l9"></p>
+          <p id="l10"></p>
+          <p id="l11"></p>
+          <p id="l12"></p>
+          <p id="l13"></p>
+          <p id="l14"></p>
+          <p id="l15"></p>
+          <p id="l16"></p>
+          <p id="l17"></p>
+          <p id="l18"></p>
+          <p id="l19"></p>
+          <p id="l20"></p>
+          <p id="l21"></p>
+          <p id="l22"></p>
+          <p id="l23"></p>
+          <p id="l24"></p>
+          <p id="l25"></p>
+          <p id="l26"></p>
+          <p id="l27"></p>
+          <p id="l28"></p>
+          <p id="l29"></p>
+          <p id="l30"></p>
+          <p id="l31"></p>
+        </div>
+      </div>
+      <div id="controls">
+        <div id="switch">0/1</div>
+        <div id="slot"></div>
+      </div>
+    </div>
+
+    <script>
+
+    var FILES = {}
+    var state = {
+      __SYSTEM__: {
+        keyboard: {
+          lastKeyPressed: null,
+          keysHeld: []
+        },
+        screen: [],
+        random: Math.random(),
+        now: new Date(),
+        files: FILES
+      }
+    }
+
+    window.addEventListener('keydown', function(event) {
+      var kb = state.__SYSTEM__.keyboard
+      var keyCode = event.keyCode
+
+      if (contains(kb.keysHeld, keyCode)) {
+        return
+      }
+
+      kb.lastKeyPressed = keyCode
+      addUnique(kb.keysHeld, keyCode)
+      callMain({type: 'keydown', keyCode: keyCode})
+    })
+
+    window.addEventListener('keyup', function(event) {
+      var kb = state.__SYSTEM__.keyboard
+      var keyCode = event.keyCode
+
+      if (!contains(kb.keysHeld, keyCode)) {
+        return
+      }
+
+      remove(kb.keysHeld, keyCode)
+      callMain({type: 'keyup', keyCode: keyCode})
+    })
+
+    function redraw() {
+      var lines = document.querySelectorAll('#terminal p')
+      for (var i = 0; i < lines.length; i++) {
+        lines[i].innerText = state.__SYSTEM__.screen[i] || ''
+      }
+    }
+
+    function callMain(event) {
+      state.__SYSTEM__.random = Math.random()
+      state.__SYSTEM__.now = new Date()
+      state = main(state, event)
+      redraw()
+    }
+
+    function addUnique(list, item) {
+      if (!contains(list, item)) {
+        list.push(item)
+      }
+    }
+
+    function contains(list, item) {
+      return list.indexOf(item) >= 0
+    }
+
+    function remove(list, item) {
+      var idx = list.indexOf(item)
+      if (idx < 0) {
+        return
+      }
+      // duplicate the item in last position to the index
+      // of the item we want to remove.
+      // Then truncate the list to remove the duplicate item.
+      list[idx] = list[list.length - 1]
+      list.length = list.length - 1
+    }
+
+    function main(state, event) {
+      state.__SYSTEM__.screen = [
+        '=== Druidic Stone v0.1 =========================================',
+        '',
+        "Nice! You've just acquired a brand-new virtual computer.",
+        "Unfortunately, the only thing installed on it is a program that",
+        "just prints this text. Unless you're ready to sling some",
+        "JavaScript, you probably want to get a version that has an",
+        "operating system installed. See:",
+        "",
+        "https://github.com/druidic/MOSS",
+        "",
+        "Otherwise, you can modify the main() function in this HTML file",
+        "to write your own boot program."
+      ]
+
+      return state
+    }
+
+    callMain({type: 'boot'})
+
+    </script>
+  </body>
+</html>
