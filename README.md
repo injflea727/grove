@@ -6,6 +6,8 @@ It's also possible to write your own operating system or program that runs direc
 
 ![Screenshot of a Stone computer running a simple program](screenshot.png)
 
+## What's in the box?
+
 This repository houses a general-purpose version of the Stone computer
 that has no operating system or other software installed. The intended
 audience is software developers who want to write an operating system
@@ -64,21 +66,24 @@ built into its very core.
 At Druidic, experience has taught us that functional programming is a
 delightful and effective way to build software. We think you'll agree.
 
-### Sturdy Walls, Open Gates
+### A Walled Garden with Open Gates
 
-We'll be the first to admit that the Stone's user interface is restrictive,
-and even primitive. If you come in expecting a tech-level similar to the Apple II,
+We'll be the first to admit that the Stone's text-only
+user interface is restrictive, and even primitive.
+If you come in expecting a tech-level similar to the Apple II,
 we think you'll be pleasantly surprised.
 
-We think that these restrictions can actually be a boon to programmers.
-They encourage you to focus more on features and functionality,
-and less on making a glossy UI.
+However, we believe that these restrictions
+can actually be a boon to programmers.
+They help focus your efforts on features and functionality,
+and relieve you of the endless visual tweaking that attends
+GUI development.
 
-Although the Stone can only run certain, restricted types of programs, that
-doesn't mean it can't *produce* more complex software. The
+Although the Stone is restricted to text-only programs, that
+doesn't mean it can't *produce* multimedia software. The
 [MOSS](https://github.com/druidic/MOSS) operating system gives you tools to
 create fully-featured HTML and JavaScript applications that run in your
-web browser. The Stone is, almost paradoxically, both ascetic and cosmopolitan.
+web browser.
 
 ## API Reference
 
