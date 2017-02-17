@@ -1,20 +1,20 @@
-# The Stone Virtual PC
+# The Grove Virtual PC
 
-The **Stone** is a virtual personal computer that runs in a web browser.
+The **Grove** is a virtual personal computer that runs in a web browser.
 You can use it to run the [MOSS](https://github.com/druidic/MOSS) operating system.
-It's also possible to write your own operating system or program that runs directly on a Stone.
+It's also possible to write your own operating system or program that runs directly on a Grove.
 
-![Screenshot of a Stone computer running a simple program](screenshot.png)
+![Screenshot of a Grove computer running a simple program](screenshot.png)
 
 ## What's in the box?
 
-This repository houses a general-purpose version of the Stone computer
+This repository houses a general-purpose version of the Grove computer
 that has no operating system or other software installed. The intended
 audience is software developers who want to write an operating system
-or other software for the Stone. If you want a virtual computer that's
+or other software for the Grove. If you want a virtual computer that's
 actually usable out of the box, check out the repo for the
 [MOSS](https://github.com/druidic/MOSS) operating system, which contains
-a Stone image with an OS already installed.
+a Grove image with an OS already installed.
 
 ## Installation
 
@@ -38,20 +38,20 @@ use but which has its own rough edges, and is particularly unsuited to
 programming.
 
 We believe that computers don't have to be complicated to be useful,
-and we've made an effort to ensure that the Stone has no unnecessary
+and we've made an effort to ensure that the Grove has no unnecessary
 moving parts.
 
 ### Immutable File Storage
 
-The Stone uses a [quine](https://en.wikipedia.org/wiki/Quine_(computing))-based file storage system:
+The Grove uses a [quine](https://en.wikipedia.org/wiki/Quine_(computing))-based file storage system:
 rather than destructively updating its persistent state,
-the Stone emits the source code for a new virtual computer that has the updated state.
+the Grove emits the source code for a new virtual computer that has the updated state.
 This makes it easy to restore an earlier version of your system if
 you accidentally make unwanted changes.
 
 ### Functional API
 
-The Stone's API encourages you to write your programs in a functional style.
+The Grove's API encourages you to write your programs in a functional style.
 This means that, whenever feasible, programs are built out of *pure functions*
 that merely transform inputs into outputs.
 Pure functions have no side effects or dependencies on global state.
@@ -68,7 +68,7 @@ delightful and effective way to build software. We think you'll agree.
 
 ### A Walled Garden with Open Gates
 
-We'll be the first to admit that the Stone's text-only
+We'll be the first to admit that the Grove's text-only
 user interface is restrictive, and even primitive.
 If you come in expecting a tech-level similar to the Apple II,
 we think you'll be pleasantly surprised.
@@ -79,7 +79,7 @@ They help focus your efforts on features and functionality,
 and relieve you of the endless visual tweaking that attends
 GUI development.
 
-Although the Stone is restricted to text-only programs, that
+Although the Grove is restricted to text-only programs, that
 doesn't mean it can't *produce* multimedia software. The
 [MOSS](https://github.com/druidic/MOSS) operating system gives you tools to
 create fully-featured HTML and JavaScript applications that run in your
@@ -87,7 +87,7 @@ web browser.
 
 ## API Reference
 
-When a Stone system starts up, it tries to run the program defined in the global `main()` function.
+When a Grove system starts up, it tries to run the program defined in the global `main()` function.
 
 ```javascript
 function main(state, event) {
