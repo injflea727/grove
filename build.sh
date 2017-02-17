@@ -7,4 +7,4 @@ cat $(find src -name '*.js') $(find 'test' -name '*.js') \
 
 jasmine .build-tmp/test.js
 
-./resolve_includes.rb < src/index.html.template > index.html
+./resolve_includes.rb < src/index.template.html > index.html
