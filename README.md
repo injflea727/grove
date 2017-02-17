@@ -87,62 +87,65 @@ web browser.
 
 ## API Reference
 
-When a Grove system starts up, it tries to run the program defined in the global `main()` function.
+### The Data Storage System
+
+The **data storage system** holds *entries*, which may be documents,
+programs, or any other data. An entry has a *name*, which must be unique among
+all entries in the system. It also has *content*.
+
+Data written to the data storage system will persist across
+restarts of the computer.
+
+Most of the time, the programs you use will
+interact with the data storage system on your behalf. However,
+you can also read and write to data storage directly by
+clicking the `View` and `Edit` buttons on the right side of
+the computer's case.
+
+### Starting up
+
+When a Grove system starts up, it looks for a data entry called
+`system/startup.js`. It expects this entry to contain the
+definition of a function `main()`. If the `main()`
+function exists, the Grove
+will run it. If not, it will display an error message to
+explain what went wrong.
+
+Here is an example `system/startup.js`:
 
 ```javascript
-function main(state, event) {
-  // ...
+main() {
+  return 'Hello, world!'
 }
 ```
 
-This function will be called many times as the system runs. Specifically, it will be called for
-every *event* that occurs in the system. Events can include:
+This is not a very interesting program. It will cause the
+Grove to display just the text `Hello, world!`. It
+will not react to any input; the text will just remain on
+the screen forever. Kind of pointless, but it does
+illustrate the fact that whatever text is returned from
+`main()` will be displayed on the screen.
 
-- Keypresses on the keyboard
-- Animation timer events
-- HTTP calls returning or failing
+Let's write a more interesting program. Here is one that
+counts the number of keys the user has pressed since the
+computer started up.
 
-The `main()` function takes two arguments: the `state` of the system and the `event` that occurred.
-It should return a new `state` object, which will be passed back to `main()`, possibly with some changes,
-on the next `event`.
-
-On the first call to `main()`, the event will be `{type: 'boot'}` and the `state` will be an object containing
-only the *system section*, described below.
-
-The state object has a *system section* which is a description
-of the state of the filesystem, screen buffer, keyboard, clock, and random number generator.
-
-```
-{
-  __SYSTEM__: {
-    keyboard: {
-      lastKeyPressed: [number | null],
-      keysHeld: [number]
-    },
-    screen: [
-      [string | [[string | {format: string, text: string}]]]
-    ],
-    clock: Date,
-    random: number,
-    files: {[string]: string}
+```javascript
+var count = 0
+main(event) {
+  if (event.type === KEY_PRESS) {
+    count++
   }
+  return 'Keys pressed: ' + count
 }
 ```
 
-### Global functions
+What's going on here? The key to understanding this is that
+`main` is called more than once. In fact, `main` is called
+every time the Grove detects an *event* in the system.
+An event can be any of the following:
 
-```
-http(['get' | 'put' | 'post' | 'patch' | 'delete'], string, {
-  headers: {[string]: string},
-  body: string
-})
-```
-
-```
-{
-  status: ['pending' | 'succeeded' | 'failed'],
-  error: string,
-  statusCode: [number | null],
-  response: string
-}
-```
+- a keypress or key release
+- a file change
+- a web request returning some data or failing
+- an animation timer ticking ahead to a new frame
