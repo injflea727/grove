@@ -1,7 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background-color: #543;
   min-height: 100vh;
+  padding-top: 18px;
   background-image: linear-gradient(to bottom, #bcd 0px, #9ab 550px, #543 550px, #765 1400px);
 }
 
@@ -11,7 +16,6 @@ body {
   background-color: #aa9;
   padding: 36px 36px 90px 36px;
 
-  margin-top: 12px;
   margin-left: auto;
   margin-right: auto;
 
@@ -21,7 +25,7 @@ body {
   border-bottom: 4px solid #998;
   border-right: 4px solid #998;
 
-  box-shadow: 0 -30px 80px rgba(0,0,0,0.4);
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
 }
 
 #bezel {
