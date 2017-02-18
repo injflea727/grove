@@ -317,6 +317,26 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
     </script>
 
     <script>
+DataStorage = function(entries) {
+  var dataStorage = {}
+
+  dataStorage.read = function(entryName) {
+    return entries[entryName] || ''
+  }
+
+  dataStorage.write = function(entryName, content) {
+    if (content === undefined || content === '' || content === null) {
+      delete entries[entryName]
+    } else {
+      entries[entryName] = '' + content
+    }
+  }
+
+  return dataStorage
+}
+    </script>
+
+    <script>
 function htmlEscape(string) {
   return string
     .replace(/&/g, "&amp;")
@@ -339,12 +359,19 @@ function formatLineAsHtml(line) {
     }
   }
 }
+function formatDateForFilename(date) {
+  var parts = date.toISOString().split(/[\-T:\.]/)
+  return parts[0] + parts[1] + parts[2]
+      + '-' + parts[3] + parts[4] + parts[5]
+}
     </script>
 
     <script>
 // assert that necessary globals exist
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
+
+var dataStorage = DataStorage(FILES)
 
 var $ = document.querySelectorAll.bind(document)
 
@@ -418,15 +445,13 @@ function Grove(redraw) {
   }
 }
 
-Grove(redraw).startup()
-
 click($diskSlot, function() {
   $filesScript.innerText =
     'var FILES = ' + JSON.stringify(FILES)
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
-  saveAs(blob, 'saved.html')
+  saveAs(blob, createFilename())
 })
 
 click($showDataEditorButton, function() {
@@ -442,7 +467,7 @@ click($dataEditorSaveButton, function() {
   var content = $entryContentInput.value
 
   if (!name) return
-  FILES[name] = content
+  dataStorage.write(name, content)
 })
 
 var isOn = true
@@ -462,6 +487,14 @@ function redraw(text) {
     lines[i].innerText = text[i] || ''
   }
 }
+
+function createFilename() {
+  var date = new Date()
+  var name = dataStorage.read('system/name') || 'grove'
+  return name + '-' + formatDateForFilename(date)
+}
+
+Grove(redraw).startup()
     </script>
   </body>
 </html>

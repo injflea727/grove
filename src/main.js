@@ -2,6 +2,8 @@
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
 
+var dataStorage = DataStorage(FILES)
+
 var $ = document.querySelectorAll.bind(document)
 
 // DOM elements
@@ -74,15 +76,13 @@ function Grove(redraw) {
   }
 }
 
-Grove(redraw).startup()
-
 click($diskSlot, function() {
   $filesScript.innerText =
     'var FILES = ' + JSON.stringify(FILES)
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
-  saveAs(blob, 'saved.html')
+  saveAs(blob, createFilename())
 })
 
 click($showDataEditorButton, function() {
@@ -98,7 +98,7 @@ click($dataEditorSaveButton, function() {
   var content = $entryContentInput.value
 
   if (!name) return
-  FILES[name] = content
+  dataStorage.write(name, content)
 })
 
 var isOn = true
@@ -118,3 +118,11 @@ function redraw(text) {
     lines[i].innerText = text[i] || ''
   }
 }
+
+function createFilename() {
+  var date = new Date()
+  var name = dataStorage.read('system/name') || 'grove'
+  return name + '-' + formatDateForFilename(date)
+}
+
+Grove(redraw).startup()
