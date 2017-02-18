@@ -6,6 +6,7 @@ var $ = document.querySelectorAll.bind(document)
 
 // DOM elements
 var $diskSlot = $('#slot')[0]
+var $powerSwitch = $('#power-switch')[0]
 var $filesScript = $('#files')[0]
 
 var $modalOverlay = $('#overlay')[0]
@@ -98,6 +99,17 @@ click($dataEditorSaveButton, function() {
 
   if (!name) return
   FILES[name] = content
+})
+
+var isOn = true
+click($powerSwitch, function() {
+  isOn = !isOn
+
+  if (isOn) {
+    Grove(redraw).startup()
+  } else {
+    redraw([])
+  }
 })
 
 function redraw(text) {

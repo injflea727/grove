@@ -148,12 +148,12 @@ body {
   padding-bottom: 12px;
 }
 
-#switch, #slot, #data-editor-button {
+#power-switch, #slot, #data-editor-button {
   cursor: pointer;
   position: absolute;
 }
 
-#switch {
+#power-switch {
   bottom: 30px;
   left: 36px;
   color: #383838;
@@ -166,7 +166,7 @@ body {
   box-shadow: 1px 1px 0 #bba;
 }
 
-#switch:active {
+#power-switch:active {
   border: 1px solid #887;
   box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1);
 }

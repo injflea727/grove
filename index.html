@@ -155,12 +155,12 @@ body {
   padding-bottom: 12px;
 }
 
-#switch, #slot, #data-editor-button {
+#power-switch, #slot, #data-editor-button {
   cursor: pointer;
   position: absolute;
 }
 
-#switch {
+#power-switch {
   bottom: 30px;
   left: 36px;
   color: #383838;
@@ -173,7 +173,7 @@ body {
   box-shadow: 1px 1px 0 #bba;
 }
 
-#switch:active {
+#power-switch:active {
   border: 1px solid #887;
   box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1);
 }
@@ -287,7 +287,7 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
         </div>
       </div>
       <div id="controls">
-        <div id="switch">0/1</div>
+        <div id="power-switch">0/1</div>
         <div id="slot"></div>
         <div id="data-editor-button"></div>
       </div>
@@ -350,6 +350,7 @@ var $ = document.querySelectorAll.bind(document)
 
 // DOM elements
 var $diskSlot = $('#slot')[0]
+var $powerSwitch = $('#power-switch')[0]
 var $filesScript = $('#files')[0]
 
 var $modalOverlay = $('#overlay')[0]
@@ -442,6 +443,17 @@ click($dataEditorSaveButton, function() {
 
   if (!name) return
   FILES[name] = content
+})
+
+var isOn = true
+click($powerSwitch, function() {
+  isOn = !isOn
+
+  if (isOn) {
+    Grove(redraw).startup()
+  } else {
+    redraw([])
+  }
 })
 
 function redraw(text) {
