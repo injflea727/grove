@@ -51,7 +51,7 @@ body {
 }
 
 .file-selector input {
-  width: 287px;
+  width: 399px;
   height: 30px;
   font-size: 14px;
 }
@@ -304,7 +304,6 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
         <div class="file-selector">
           <input type="text">
           <button class="save">Save</button>
-          <button class="load">Load</button>
         </div>
 
         <textarea></textarea>
@@ -366,11 +365,6 @@ var overlay = $('#overlay')[0]
 $('#file-modal .close-button button')[0]
   .addEventListener('click', function() {
     overlay.style.display = 'none';
-  })
-
-$('#data-editor-button')[0]
-  .addEventListener('click', function() {
-    overlay.style.display = 'block';
   })
 
 $('#data-editor-button')[0]
