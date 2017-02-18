@@ -28,11 +28,6 @@ $('#data-editor-button')[0]
     overlay.style.display = 'block';
   })
 
-$('#data-editor-button')[0]
-  .addEventListener('click', function() {
-    overlay.style.display = 'block';
-  })
-
 var fileNameInput = $('#file-modal .file-selector input')[0]
 var fileContentInput = $('#file-modal textarea')[0]
 $('#file-modal .save')[0]
