@@ -28,6 +28,21 @@ $('#data-editor-button')[0]
     overlay.style.display = 'block';
   })
 
+$('#data-editor-button')[0]
+  .addEventListener('click', function() {
+    overlay.style.display = 'block';
+  })
+
+var fileNameInput = $('#file-modal .file-selector input')[0]
+var fileContentInput = $('#file-modal textarea')[0]
+$('#file-modal .save')[0]
+  .addEventListener('click', function() {
+    console.log('saving file', fileNameInput.value, fileContentInput.value)
+    var filename = fileNameInput.value
+    if (!filename) return
+    FILES[filename] = fileContentInput.value
+  })
+
 function redraw(text) {
   var lines = $('#terminal p')
   for (var i = 0; i < lines.length; i++) {

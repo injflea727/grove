@@ -303,8 +303,8 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
         </div>
         <div class="file-selector">
           <input type="text">
-          <button>Save</button>
-          <button>Load</button>
+          <button class="save">Save</button>
+          <button class="load">Load</button>
         </div>
 
         <textarea></textarea>
@@ -371,6 +371,21 @@ $('#file-modal .close-button button')[0]
 $('#data-editor-button')[0]
   .addEventListener('click', function() {
     overlay.style.display = 'block';
+  })
+
+$('#data-editor-button')[0]
+  .addEventListener('click', function() {
+    overlay.style.display = 'block';
+  })
+
+var fileNameInput = $('#file-modal .file-selector input')[0]
+var fileContentInput = $('#file-modal textarea')[0]
+$('#file-modal .save')[0]
+  .addEventListener('click', function() {
+    console.log('saving file', fileNameInput.value, fileContentInput.value)
+    var filename = fileNameInput.value
+    if (!filename) return
+    FILES[filename] = fileContentInput.value
   })
 
 function redraw(text) {
