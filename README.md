@@ -149,3 +149,26 @@ An event can be any of the following:
 - a file change
 - a web request returning some data or failing
 - an animation timer ticking ahead to a new frame
+
+### Event Structure
+
+```
+{
+  type: [KEY_PRESS | KEY_RELEASE | TIMER | ANIMATION_TIMER | ... ],
+  dataEntries: Immutable.Map<string, string>,
+  random: number,
+  datetime: Date,
+}
+```
+
+### Command Structure
+
+```
+{
+  display: DisplayLines,
+  dataEntries: Immutable.Map<string, string>,
+  timerPeriodMs: number,
+  animationTimerEnabled: boolean,
+  midi: TBD
+}
+```
