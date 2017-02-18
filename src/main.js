@@ -16,6 +16,17 @@ document.getElementById('slot').addEventListener('click', function() {
   saveAs(blob, 'saved.html')
 })
 
+var overlay = document.getElementById('overlay')
+document.querySelector('#file-modal .close-button button')
+  .addEventListener('click', function() {
+    overlay.style.display = 'none';
+  })
+
+document.getElementById('data-editor-button')
+  .addEventListener('click', function() {
+    overlay.style.display = 'block';
+  })
+
 window.addEventListener('keydown', function(event) {
   var keyCode = event.keyCode
 
