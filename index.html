@@ -347,13 +347,14 @@ function formatLineAsHtml(line) {
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
 
-var keyboardState = {keysHeld: []}
+var $ = document.querySelectorAll.bind(document)
+
 var osMain = function() {
   return 'If you can read this, something broke.'
 }
 
-document.getElementById('slot').addEventListener('click', function() {
-  document.getElementById('files').innerText =
+$('#slot')[0].addEventListener('click', function() {
+  $('#files')[0].innerText =
     'var FILES = ' + JSON.stringify(FILES)
 
   var pageData = document.documentElement.outerHTML
@@ -361,43 +362,19 @@ document.getElementById('slot').addEventListener('click', function() {
   saveAs(blob, 'saved.html')
 })
 
-var overlay = document.getElementById('overlay')
-document.querySelector('#file-modal .close-button button')
+var overlay = $('#overlay')[0]
+$('#file-modal .close-button button')[0]
   .addEventListener('click', function() {
     overlay.style.display = 'none';
   })
 
-document.getElementById('data-editor-button')
+$('#data-editor-button')[0]
   .addEventListener('click', function() {
     overlay.style.display = 'block';
   })
 
-window.addEventListener('keydown', function(event) {
-  var keyCode = event.keyCode
-
-  if (contains(keyboardState.keysHeld, keyCode)) {
-    return
-  }
-
-  keyboardState.lastKeyPressed = keyCode
-  addUnique(keyboardState.keysHeld, keyCode)
-  callMain({type: 'keydown', keyCode: keyCode})
-})
-
-window.addEventListener('keyup', function(event) {
-  var kb = state.__SYSTEM__.keyboard
-  var keyCode = event.keyCode
-
-  if (!contains(kb.keysHeld, keyCode)) {
-    return
-  }
-
-  remove(kb.keysHeld, keyCode)
-  callMain({type: 'keyup', keyCode: keyCode})
-})
-
 function redraw(text) {
-  var lines = document.querySelectorAll('#terminal p')
+  var lines = $('#terminal p')
   for (var i = 0; i < lines.length; i++) {
     lines[i].innerText = text[i] || ''
   }
@@ -405,28 +382,6 @@ function redraw(text) {
 
 function callMain(event) {
   redraw(osMain(event))
-}
-
-function addUnique(list, item) {
-  if (!contains(list, item)) {
-    list.push(item)
-  }
-}
-
-function contains(list, item) {
-  return list.indexOf(item) >= 0
-}
-
-function remove(list, item) {
-  var idx = list.indexOf(item)
-  if (idx < 0) {
-    return
-  }
-  // duplicate the item in last position to the index
-  // of the item we want to remove.
-  // Then truncate the list to remove the duplicate item.
-  list[idx] = list[list.length - 1]
-  list.length = list.length - 1
 }
 
 function startup() {
