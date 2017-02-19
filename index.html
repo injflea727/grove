@@ -393,11 +393,31 @@ function click(elem, callback) {
 
 function Grove(redraw) {
   var osMain = function() {
-    return ['Error ed626bdd']
+    // Users should never see this,
+    // but if they do, I want them to open an issue.
+    return ['Cryptic error ed626bdd!']
   }
 
   return {
-    startup: startup
+    startup: startup,
+    handleKeyUp: handleKeyUp,
+    handleKeyDown: handleKeyDown
+  }
+
+  function handleKeyUp(keyCode, pressedKeys) {
+    redraw(osMain({
+      type: 'keyUp',
+      keyCode: keyCode,
+      pressedKeys: pressedKeys
+    }))
+  }
+
+  function handleKeyDown(keyCode, pressedKeys) {
+    redraw(osMain({
+      type: 'keyDown',
+      keyCode: keyCode,
+      pressedKeys: pressedKeys
+    }))
   }
 
   function startup() {
@@ -441,7 +461,7 @@ function Grove(redraw) {
         ]
       }
     }
-    redraw(osMain())
+    redraw(osMain({type: 'startup'}))
   }
 }
 
@@ -475,7 +495,8 @@ click($powerSwitch, function() {
   isOn = !isOn
 
   if (isOn) {
-    Grove(redraw).startup()
+    grove = Grove(redraw)
+    grove.startup()
   } else {
     redraw([])
   }
@@ -494,7 +515,23 @@ function createFilename() {
   return name + '-' + formatDateForFilename(date)
 }
 
-Grove(redraw).startup()
+var grove = Grove(redraw)
+grove.startup()
+
+var pressedKeys = Immutable.Set()
+window.addEventListener('keydown', function(event) {
+  var keyCode = event.keyCode
+  pressedKeys = pressedKeys.add(keyCode)
+
+  grove.handleKeyDown(keyCode, pressedKeys)
+})
+
+window.addEventListener('keyup', function(event) {
+  var keyCode = event.keyCode
+  pressedKeys = pressedKeys.remove(keyCode)
+
+  grove.handleKeyUp(keyCode, pressedKeys)
+})
     </script>
   </body>
 </html>
