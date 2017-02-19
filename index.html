@@ -465,6 +465,7 @@ function Grove(redraw) {
   }
 }
 
+lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
   $filesScript.innerText =
     'var FILES = ' + JSON.stringify(FILES)
@@ -472,6 +473,7 @@ click($diskSlot, function() {
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
   saveAs(blob, createFilename())
+  lastSaveTimestamp = +(new Date())
 })
 
 click($showDataEditorButton, function() {
@@ -515,6 +517,10 @@ function createFilename() {
   return name + '-' + formatDateForFilename(date)
 }
 
+function shouldWarnAboutUnsavedChanges() {
+  return +(new Date()) - lastSaveTimestamp > 30 * 1000
+}
+
 var grove = Grove(redraw)
 grove.startup()
 
@@ -534,7 +540,10 @@ window.addEventListener('keyup', function(event) {
 })
 
 window.addEventListener('beforeunload', function(e) {
-  return e.returnValue = "You have unsaved changes. Are you sure you want to leave?"
+  if (shouldWarnAboutUnsavedChanges()) {
+    // This message isn't shown in Chrome but it might be in other browsers.
+    return e.returnValue = "You have unsaved changes. Are you sure you want to leave?"
+  }
 })
     </script>
   </body>
