@@ -17,9 +17,18 @@ var $showDataEditorButton = $('#data-editor-button')[0]
 var $entryNameInput = $('#file-modal .file-selector input')[0]
 var $entryContentInput = $('#file-modal textarea')[0]
 var $dataEditorSaveButton = $('#file-modal .save')[0]
+var $title = $('head title')[0]
 
 function click(elem, callback) {
   elem.addEventListener('click', callback)
+}
+
+function getComputerName() {
+  return dataStorage.read('system/name') || 'grove'
+}
+
+function setTitleToComputerName() {
+  $title.innerText = getComputerName()
 }
 
 function Grove(redraw) {
@@ -54,10 +63,12 @@ function Grove(redraw) {
   function startup() {
     var filename = 'system/startup.js'
 
-    try {
-      var startupjs = FILES[filename]
+    setTitleToComputerName()
 
-      if (typeof startupjs === 'undefined') {
+    try {
+      var startupjs = dataStorage.read(filename)
+
+      if (!startupjs) {
         throw new Error('Tried to read from ' + filename + ', but there is no such file')
       }
 
@@ -147,8 +158,7 @@ function redraw(text) {
 
 function createFilename() {
   var date = new Date()
-  var name = dataStorage.read('system/name') || 'grove'
-  return name + '-' + formatDateForFilename(date)
+  return getComputerName() + '-' + formatDateForFilename(date)
 }
 
 function shouldWarnAboutUnsavedChanges() {
