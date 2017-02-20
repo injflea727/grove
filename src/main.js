@@ -137,8 +137,11 @@ click($powerSwitch, function() {
 
 function redraw(text) {
   var lines = $('#terminal p')
+  if (!(text instanceof Array)) {
+    text = [text]
+  }
   for (var i = 0; i < lines.length; i++) {
-    lines[i].innerText = text[i] || ''
+    lines[i].innerHTML = FancyText(text[i] || '').toString()
   }
 }
 
