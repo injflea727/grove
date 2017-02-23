@@ -2,7 +2,7 @@
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
 
-var dataStorage = DataStorage(FILES)
+var dataStorage = DataStorage(Immutable.Map(FILES))
 
 var $ = document.querySelectorAll.bind(document)
 
@@ -110,7 +110,7 @@ function Grove(redraw) {
 lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
   $filesScript.innerText =
-    'var FILES = ' + JSON.stringify(FILES)
+    'var FILES = ' + dataStorage.toJSON()
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
@@ -131,7 +131,7 @@ click($dataEditorSaveButton, function() {
   var content = $entryContentInput.value
 
   if (!name) return
-  dataStorage.write(name, content)
+  dataStorage = dataStorage.write(name, content)
 })
 
 var isOn = true
