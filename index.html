@@ -404,6 +404,8 @@ function formatObjectToStyleString(format) {
   }
   return out.join(';')
 }
+
+var T = FancyText
 function formatDateForFilename(date) {
   var parts = date.toISOString().split(/[\-T:\.]/)
   return parts[0] + parts[1] + parts[2]
@@ -456,23 +458,6 @@ function Grove(redraw) {
     startup: startup,
     handleKeyUp: handleKeyUp,
     handleKeyDown: handleKeyDown
-  }
-
-  function normalizeCommands(commands) {
-    if (typeof commands === 'string' || commands instanceof Array) {
-      return {screen: commands}
-    } else {
-      return commands
-    }
-  }
-
-  function handleEvent(event) {
-    event = Object.assign({dataStorage: dataStorage}, event)
-
-    var commands = normalizeCommands(osMain(event))
-
-    dataStorage = commands.dataStorage || dataStorage
-    redraw(commands.screen)
   }
 
   function handleKeyUp(keyCode, pressedKeys) {

@@ -71,4 +71,29 @@ describe('Grove', function() {
     g.turnOn()
     expect(lastOutput).toEqual(['&lt;script&gt;hacked&amp;'])
   })
+
+  it('allows main() to format text using FancyText', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return T("hello", {text: "blue", highlight: "green"}) }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toEqual(['<span style="color:blue;background-color:green">hello</span>'])
+  })
+
+  it('has a name, read from system/name', function() {
+    var files = {
+      'system/name': 'custom name'
+    }
+    var g = Grove(files, receiveOutput)
+    expect(g.getName()).toBe('custom name')
+  })
+
+  it('uses "grove" as the default name', function() {
+    var files = {
+    }
+    var g = Grove(files, receiveOutput)
+    expect(g.getName()).toBe('grove')
+  })
 })

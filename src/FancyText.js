@@ -48,3 +48,5 @@ function formatObjectToStyleString(format) {
   }
   return out.join(';')
 }
+
+var T = FancyText

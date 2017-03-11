@@ -23,7 +23,8 @@ function Grove (files, printTrustedOutput) {
   // === Public interface declaration =====================
 
   return {
-    turnOn: turnOn
+    turnOn: turnOn,
+    getName: getName
   }
 
   // === Public function definitions ======================
@@ -54,7 +55,7 @@ function Grove (files, printTrustedOutput) {
     var script = runnableStartupScript(getStartupJs())
     var main = wrappedEval(script)
 
-    printTrustedOutput([htmlEscape(main())])
+    printTrustedOutput([FancyText(main()).toString()])
   }
 
   function printErrorFromStartup (e) {
@@ -87,5 +88,9 @@ function Grove (files, printTrustedOutput) {
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
+  }
+
+  function getName() {
+    return files['system/name'] || 'grove'
   }
 }
