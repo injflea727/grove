@@ -30,6 +30,22 @@ describe('Grove', function() {
     expect(lastOutput).toContain('SyntaxError: Unexpected token (')
   })
 
+  it('can be rebooted after an error', function() {
+    var files = {
+      'system/startup.js':
+        'function ()'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toContain('An error occurred while starting up:')
+
+    g.turnOff()
+    files['system/startup.js'] = 'function main() { return "it works" }'
+    g.turnOn()
+
+    expect(lastOutput).toEqual(['it works'])
+  })
+
   it('renders the output of main() when the startup file is valid', function() {
     var files = {
       'system/startup.js':

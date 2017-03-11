@@ -24,6 +24,7 @@ function Grove (files, printTrustedOutput) {
 
   return {
     turnOn: turnOn,
+    turnOff: turnOff,
     getName: getName
   }
 
@@ -39,6 +40,10 @@ function Grove (files, printTrustedOutput) {
     } else {
       printStartupJsNotFoundError()
     }
+  }
+
+  function turnOff() {
+    printTrustedOutput([])
   }
 
   // === Private functions ================================
