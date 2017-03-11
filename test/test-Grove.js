@@ -1,3 +1,5 @@
+var Immutable = require('../src/immutable')
+
 describe('Grove', function() {
   var lastOutput
   function receiveOutput (output) {
@@ -6,6 +8,19 @@ describe('Grove', function() {
 
   beforeEach(function() {
     lastOutput = []
+  })
+
+  it('is initially off', function() {
+    var g = Grove({}, receiveOutput)
+    expect(g.isOn()).toBe(false)
+  })
+
+  it('turns on and off', function() {
+    var g = Grove({}, receiveOutput)
+    g.turnOn()
+    expect(g.isOn()).toBe(true)
+    g.turnOff()
+    expect(g.isOn()).toBe(false)
   })
 
   it('initially renders nothing', function() {
@@ -40,7 +55,7 @@ describe('Grove', function() {
     expect(lastOutput).toContain('An error occurred while starting up:')
 
     g.turnOff()
-    files['system/startup.js'] = 'function main() { return "it works" }'
+    g.editEntry('system/startup.js', 'function main() { return "it works" }')
     g.turnOn()
 
     expect(lastOutput).toEqual(['it works'])

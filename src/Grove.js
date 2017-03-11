@@ -20,17 +20,25 @@ function wrappedEval (code) {
 function Grove (files, printTrustedOutput) {
   "use strict"
 
+  // === State variables ==================================
+
+  var on      = false
+  var entries = Immutable.Map(files)
+
   // === Public interface declaration =====================
 
   return {
-    turnOn: turnOn,
-    turnOff: turnOff,
-    getName: getName
+    turnOn:    turnOn,
+    turnOff:   turnOff,
+    isOn:      isOn,
+    getName:   getName,
+    editEntry: editEntry
   }
 
   // === Public function definitions ======================
 
   function turnOn() {
+    on = true
     if (getStartupJs()) {
       try {
         bootFromStartupScript()
@@ -43,7 +51,16 @@ function Grove (files, printTrustedOutput) {
   }
 
   function turnOff() {
+    on = false
     printTrustedOutput([])
+  }
+
+  function isOn() {
+    return on
+  }
+
+  function editEntry(name, content) {
+    entries = entries.set(name, content)
   }
 
   // === Private functions ================================
@@ -89,7 +106,7 @@ function Grove (files, printTrustedOutput) {
   }
 
   function getStartupJs() {
-    return files['system/startup.js']
+    return entries.get('system/startup.js')
   }
 
   function getGlobalObject () {
@@ -107,6 +124,6 @@ function Grove (files, printTrustedOutput) {
   }
 
   function getName() {
-    return files['system/name'] || 'grove'
+    return entries.get('system/name') || 'grove'
   }
 }

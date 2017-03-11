@@ -1,3 +1,6 @@
+;(function() {
+"use strict"
+
 // assert that necessary globals exist
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
@@ -10,7 +13,6 @@ var $ = document.querySelectorAll.bind(document)
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
 var $filesScript = $('#files')[0]
-
 var $modalOverlay = $('#overlay')[0]
 var $hideDataEditorButton = $('#file-modal .close-button button')[0]
 var $showDataEditorButton = $('#data-editor-button')[0]
@@ -23,91 +25,11 @@ function click(elem, callback) {
   elem.addEventListener('click', callback)
 }
 
-function getComputerName() {
-  return dataStorage.read('system/name') || 'grove'
-}
-
 function setTitleToComputerName() {
-  $title.innerText = getComputerName()
+  $title.innerText = grove.getName()
 }
 
-function Grove(redraw) {
-  var osMain = function() {
-    // Users should never see this,
-    // but if they do, I want them to open an issue.
-    return ['Cryptic error ed626bdd!']
-  }
-
-  return {
-    startup: startup,
-    handleKeyUp: handleKeyUp,
-    handleKeyDown: handleKeyDown
-  }
-
-  function handleKeyUp(keyCode, pressedKeys) {
-    redraw(osMain({
-      type: 'keyUp',
-      keyCode: keyCode,
-      pressedKeys: pressedKeys
-    }))
-  }
-
-  function handleKeyDown(keyCode, pressedKeys) {
-    redraw(osMain({
-      type: 'keyDown',
-      keyCode: keyCode,
-      pressedKeys: pressedKeys
-    }))
-  }
-
-  function startup() {
-    var filename = 'system/startup.js'
-
-    setTitleToComputerName()
-
-    try {
-      var startupjs = dataStorage.read(filename)
-
-      if (!startupjs) {
-        throw new Error('Tried to read from ' + filename + ', but there is no such file')
-      }
-
-      var obtainMain = '(function() { '
-        // + 'var main;' // shadow the global `main` function so bootjs can define its own
-        + 'return (function() {'
-        + startupjs
-        + ';return main})()})()'
-
-      osMain = eval(obtainMain)
-
-      if (typeof osMain !== 'function') {
-        throw new Error(filename + ' needs to define a `main` function.')
-      }
-    } catch(e) {
-      osMain = function() {
-        return [
-          '\u2588\u2584\u2580\u2584\u2580\u2588 Druidic Grove v0.1 \u2588\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2588',
-          '',
-          "Nice! You've just acquired a brand-new virtual computer.",
-          "Unfortunately, the only thing installed on it is a program that",
-          "just prints this text. Unless you're ready to sling some",
-          ["JavaScript, you probably want to get a version that has an"],
-          "operating system installed. See:",
-          "",
-          "https://github.com/druidic/MOSS",
-          "",
-          "If you already tried to install an operating system... bad news:",
-          "it didn't work. The error message below might help you debug.",
-          '',
-          e.message
-        ]
-      }
-    }
-    redraw(osMain({type: 'startup'}))
-  }
-}
-
-lastSaveTimestamp = +(new Date())
+var lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
   $filesScript.innerText =
     'var FILES = ' + dataStorage.toJSON()
@@ -131,28 +53,21 @@ click($dataEditorSaveButton, function() {
   var content = $entryContentInput.value
 
   if (!name) return
-  dataStorage = dataStorage.write(name, content)
+  grove.editEntry(name, content)
 })
 
-var isOn = true
 click($powerSwitch, function() {
-  isOn = !isOn
-
-  if (isOn) {
-    grove = Grove(redraw)
-    grove.startup()
+  if (grove.isOn()) {
+    grove.turnOff()
   } else {
-    redraw([])
+    grove.turnOn()
   }
 })
 
 function redraw(text) {
   var lines = $('#terminal p')
-  if (!(text instanceof Array)) {
-    text = [text]
-  }
   for (var i = 0; i < lines.length; i++) {
-    lines[i].innerHTML = FancyText(text[i] || '').toString()
+    lines[i].innerHTML = text[i] || ''
   }
 }
 
@@ -165,27 +80,14 @@ function shouldWarnAboutUnsavedChanges() {
   return +(new Date()) - lastSaveTimestamp > 30 * 1000
 }
 
-var grove = Grove(redraw)
-grove.startup()
-
-var pressedKeys = Immutable.Set()
-window.addEventListener('keydown', function(event) {
-  var keyCode = event.keyCode
-  pressedKeys = pressedKeys.add(keyCode)
-
-  grove.handleKeyDown(keyCode, pressedKeys)
-})
-
-window.addEventListener('keyup', function(event) {
-  var keyCode = event.keyCode
-  pressedKeys = pressedKeys.remove(keyCode)
-
-  grove.handleKeyUp(keyCode, pressedKeys)
-})
-
 window.addEventListener('beforeunload', function(e) {
   if (shouldWarnAboutUnsavedChanges()) {
     // This message isn't shown in Chrome but it might be in other browsers.
     return e.returnValue = "You have unsaved changes. Are you sure you want to leave?"
   }
 })
+
+var grove = Grove(FILES, redraw)
+grove.turnOn()
+
+})();
