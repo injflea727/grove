@@ -82,6 +82,26 @@ describe('Grove', function() {
     expect(lastOutput).toEqual(['<span style="color:blue;background-color:green">hello</span>'])
   })
 
+  it('allows main() to return output as an array', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return ["line 1", "line 2"] }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toEqual(['line 1', 'line 2'])
+  })
+
+  it('allows main() to return output as an object with a "screen" property', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return {screen: "foo"} }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toEqual(['foo'])
+  })
+
   it('has a name, read from system/name', function() {
     var files = {
       'system/name': 'custom name'

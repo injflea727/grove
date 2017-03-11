@@ -55,7 +55,18 @@ function Grove (files, printTrustedOutput) {
     var script = runnableStartupScript(getStartupJs())
     var main = wrappedEval(script)
 
-    printTrustedOutput([FancyText(main()).toString()])
+    var output = main()
+    if (output.screen) {
+      output = output.screen
+    }
+
+    if (output.constructor !== Array) {
+      output = [output]
+    }
+
+    printTrustedOutput(output.map(function(line) {
+      return FancyText(line).toString()
+    }))
   }
 
   function printErrorFromStartup (e) {
