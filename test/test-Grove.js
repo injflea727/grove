@@ -39,4 +39,36 @@ describe('Grove', function() {
     g.turnOn()
     expect(lastOutput).toEqual(['hello'])
   })
+
+  it('does not allow the main() function to access Grove-defined functions', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return Grove().toString() }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toContain('An error occurred while starting up:')
+    expect(lastOutput).toContain('TypeError: Grove is not a function')
+  })
+
+  it('does not allow the main() function to access global functions', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return setTimeout().toString() }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toContain('An error occurred while starting up:')
+    expect(lastOutput).toContain('TypeError: setTimeout is not a function')
+  })
+
+  it('escapes HTML in data output from main()', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return "<script>hacked&" }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toEqual(['&lt;script&gt;hacked&amp;'])
+  })
 })
