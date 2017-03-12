@@ -147,4 +147,38 @@ describe('Grove', function() {
     var g = Grove(files, receiveOutput)
     expect(g.getName()).toBe('grove')
   })
+
+  it('outputs the filesystem state as json', function() {
+    var files = { foo: 'bar' }
+    var g = Grove(files, receiveOutput)
+    expect(g.getDataAsJSON()).toEqual('{"foo":"bar"}')
+  })
+
+  it('passes the key code to main() when a key is pressed', function() {
+    var files = {
+      'system/startup.js':
+        'function main(evt) { return evt.type + ": " + evt.key }'
+    }
+    var g = Grove(files, receiveOutput)
+
+    g.turnOn()
+    expect(lastOutput).toEqual(['startup: undefined'])
+    g.handleKeyDown({keyCode: 32})
+
+    expect(lastOutput).toEqual(['keyDown: 32'])
+  })
+
+  it('passes the key code to main() when a key is released', function() {
+    var files = {
+      'system/startup.js':
+        'function main(evt) { return evt.type + ": " + evt.key }'
+    }
+    var g = Grove(files, receiveOutput)
+
+    g.turnOn()
+    expect(lastOutput).toEqual(['startup: undefined'])
+    g.handleKeyUp({keyCode: 32})
+
+    expect(lastOutput).toEqual(['keyUp: 32'])
+  })
 })

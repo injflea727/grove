@@ -24,15 +24,19 @@ function Grove (files, printTrustedOutput) {
 
   var on      = false
   var entries = Immutable.Map(files)
+  var main    = function() {}
 
   // === Public interface declaration =====================
 
   return {
-    turnOn:    turnOn,
-    turnOff:   turnOff,
-    isOn:      isOn,
-    getName:   getName,
-    editEntry: editEntry
+    turnOn:        turnOn,
+    turnOff:       turnOff,
+    isOn:          isOn,
+    getName:       getName,
+    editEntry:     editEntry,
+    getDataAsJSON: getDataAsJSON,
+    handleKeyDown: handleKeyDown,
+    handleKeyUp:   handleKeyUp
   }
 
   // === Public function definitions ======================
@@ -63,6 +67,18 @@ function Grove (files, printTrustedOutput) {
     entries = entries.set(name, content)
   }
 
+  function getDataAsJSON() {
+    return JSON.stringify(entries.toJS())
+  }
+
+  function handleKeyDown(event) {
+    runMainAndPrintOutput({type: 'keyDown', key: event.keyCode})
+  }
+
+  function handleKeyUp(event) {
+    runMainAndPrintOutput({type: 'keyUp', key: event.keyCode})
+  }
+
   // === Private functions ================================
 
   function runnableStartupScript (src) {
@@ -75,9 +91,17 @@ function Grove (files, printTrustedOutput) {
 
   function bootFromStartupScript () {
     var script = runnableStartupScript(getStartupJs())
-    var main = wrappedEval(script)
+    main = wrappedEval(script)
+    runMainAndPrintOutput({type: 'startup'})
+  }
 
-    var output = main()
+  function runMainAndPrintOutput(event) {
+    var output = main(event)
+
+    if (output === undefined) {
+      output = '' + output
+    }
+
     if (output.screen) {
       output = output.screen
     }

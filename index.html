@@ -317,43 +317,6 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
     </script>
 
     <script>
-DataStorage = function(entries) {
-  var dataStorage = {}
-
-  dataStorage.read = function(entryName) {
-    if (isNotString(entryName)) {
-      throw Error('DataStorage#read expects to be called with a string, but got ' + entryName)
-    }
-    return entries.get(entryName) || ''
-  }
-
-  dataStorage.write = function(entryName, content) {
-    if (isNotString(entryName) || isNotString(content)) {
-      throw Error('DataStorage#write expects to be called with two strings, but got ' + entryName + ', ' + content)
-    }
-    if (content === '') {
-      return dataStorage.delete(entryName)
-    }
-    return DataStorage(entries.set(entryName, content))
-  }
-
-  dataStorage.delete = function(entryName) {
-    return DataStorage(entries.delete(entryName))
-  }
-
-  dataStorage.toJSON = function() {
-    return JSON.stringify(entries.toJS())
-  }
-
-  function isNotString(thing) {
-    return typeof thing !== 'string'
-  }
-
-  return dataStorage
-}
-    </script>
-
-    <script>
 function htmlEscape(string) {
   return string.toString()
     .replace(/&/g, "&amp;")
@@ -437,15 +400,19 @@ function Grove (files, printTrustedOutput) {
 
   var on      = false
   var entries = Immutable.Map(files)
+  var main    = function() {}
 
   // === Public interface declaration =====================
 
   return {
-    turnOn:    turnOn,
-    turnOff:   turnOff,
-    isOn:      isOn,
-    getName:   getName,
-    editEntry: editEntry
+    turnOn:        turnOn,
+    turnOff:       turnOff,
+    isOn:          isOn,
+    getName:       getName,
+    editEntry:     editEntry,
+    getDataAsJSON: getDataAsJSON,
+    handleKeyDown: handleKeyDown,
+    handleKeyUp:   handleKeyUp
   }
 
   // === Public function definitions ======================
@@ -476,6 +443,18 @@ function Grove (files, printTrustedOutput) {
     entries = entries.set(name, content)
   }
 
+  function getDataAsJSON() {
+    return JSON.stringify(entries.toJS())
+  }
+
+  function handleKeyDown(event) {
+    runMainAndPrintOutput({type: 'keyDown', key: event.keyCode})
+  }
+
+  function handleKeyUp(event) {
+    runMainAndPrintOutput({type: 'keyUp', key: event.keyCode})
+  }
+
   // === Private functions ================================
 
   function runnableStartupScript (src) {
@@ -488,9 +467,17 @@ function Grove (files, printTrustedOutput) {
 
   function bootFromStartupScript () {
     var script = runnableStartupScript(getStartupJs())
-    var main = wrappedEval(script)
+    main = wrappedEval(script)
+    runMainAndPrintOutput({type: 'startup'})
+  }
 
-    var output = main()
+  function runMainAndPrintOutput(event) {
+    var output = main(event)
+
+    if (output === undefined) {
+      output = '' + output
+    }
+
     if (output.screen) {
       output = output.screen
     }
@@ -540,17 +527,12 @@ function Grove (files, printTrustedOutput) {
     return entries.get('system/name') || 'grove'
   }
 }
-    </script>
-
-    <script>
 ;(function() {
 "use strict"
 
 // assert that necessary globals exist
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
-
-var dataStorage = DataStorage(Immutable.Map(FILES))
 
 var $ = document.querySelectorAll.bind(document)
 
@@ -577,7 +559,7 @@ function setTitleToComputerName() {
 var lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
   $filesScript.innerText =
-    'var FILES = ' + dataStorage.toJSON()
+    'var FILES = ' + grove.getDataAsJSON()
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
@@ -618,7 +600,7 @@ function redraw(text) {
 
 function createFilename() {
   var date = new Date()
-  return getComputerName() + '-' + formatDateForFilename(date)
+  return grove.getName() + '-' + formatDateForFilename(date)
 }
 
 function shouldWarnAboutUnsavedChanges() {
@@ -632,8 +614,17 @@ window.addEventListener('beforeunload', function(e) {
   }
 })
 
+window.addEventListener('keydown', function(e) {
+  grove.handleKeyDown(e)
+})
+
+window.addEventListener('keyup', function(e) {
+  grove.handleKeyUp(e)
+})
+
 var grove = Grove(FILES, redraw)
 grove.turnOn()
+setTitleToComputerName()
 
 })();
     </script>

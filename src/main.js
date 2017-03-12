@@ -5,8 +5,6 @@
 if (typeof Immutable !== 'object') throw 'immutable.js not found'
 if (typeof FILES !== 'object') throw 'FILES global not found'
 
-var dataStorage = DataStorage(Immutable.Map(FILES))
-
 var $ = document.querySelectorAll.bind(document)
 
 // DOM elements
@@ -32,7 +30,7 @@ function setTitleToComputerName() {
 var lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
   $filesScript.innerText =
-    'var FILES = ' + dataStorage.toJSON()
+    'var FILES = ' + grove.getDataAsJSON()
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
@@ -73,7 +71,7 @@ function redraw(text) {
 
 function createFilename() {
   var date = new Date()
-  return getComputerName() + '-' + formatDateForFilename(date)
+  return grove.getName() + '-' + formatDateForFilename(date)
 }
 
 function shouldWarnAboutUnsavedChanges() {
@@ -87,7 +85,16 @@ window.addEventListener('beforeunload', function(e) {
   }
 })
 
+window.addEventListener('keydown', function(e) {
+  grove.handleKeyDown(e)
+})
+
+window.addEventListener('keyup', function(e) {
+  grove.handleKeyUp(e)
+})
+
 var grove = Grove(FILES, redraw)
 grove.turnOn()
+setTitleToComputerName()
 
 })();
