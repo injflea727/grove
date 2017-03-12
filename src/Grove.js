@@ -23,7 +23,7 @@ function Grove (files, printTrustedOutput) {
   // === State variables ==================================
 
   var on      = false
-  var entries = Immutable.Map(files)
+  var data    = DataStorage(Immutable.Map(files))
   var main    = null
 
   // === Public interface declaration =====================
@@ -64,11 +64,11 @@ function Grove (files, printTrustedOutput) {
   }
 
   function editEntry(name, content) {
-    entries = entries.set(name, content)
+    data = data.write(name, content)
   }
 
   function getDataAsJSON() {
-    return JSON.stringify(entries.toJS())
+    return data.toJSON()
   }
 
   function handleKeyDown(event) {
@@ -98,13 +98,17 @@ function Grove (files, printTrustedOutput) {
   function runMainAndPrintOutput(event) {
     if (!main || !isOn()) return
 
-    var output = main(event)
+    var output = main(event, data)
 
     if (output === undefined) {
       output = '' + output
     }
 
-    if (output.screen) {
+    if (output.data) {
+      data = output.data
+    }
+
+    if (Object.prototype.hasOwnProperty.call(output, 'screen')) {
       output = output.screen
     }
 
@@ -132,7 +136,7 @@ function Grove (files, printTrustedOutput) {
   }
 
   function getStartupJs() {
-    return entries.get('system/startup.js')
+    return data.read('system/startup.js')
   }
 
   function getGlobalObject () {
@@ -150,6 +154,6 @@ function Grove (files, printTrustedOutput) {
   }
 
   function getName() {
-    return entries.get('system/name') || 'grove'
+    return data.read('system/name') || 'grove'
   }
 }

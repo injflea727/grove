@@ -201,4 +201,24 @@ describe('Grove', function() {
     g.handleKeyUp({keyCode: 32})
     expect(lastOutput).toEqual([])
   })
+
+  it('allows main() to read and write data entries', function() {
+    var files = {
+      'system/startup.js':
+        'function main(event, data) { '
+        + 'var count = +data.read("count") || 0;'
+        + 'return {'
+        + '  screen: count,'
+        + '  data:   data.write("count", "" + (count+1))'
+        + '} }'
+    }
+
+    var g = Grove(files, receiveOutput)
+    g.turnOn()
+    expect(lastOutput).toEqual(['0'])
+    g.handleKeyDown({keyCode: 65})
+    expect(lastOutput).toEqual(['1'])
+
+    expect(JSON.parse(g.getDataAsJSON()).count).toBe('2')
+  })
 })
