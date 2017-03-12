@@ -34,6 +34,13 @@ describe('Grove', function() {
     expect(lastOutput).toContain('Tried to read from system/startup.js, but there is no such entry')
   })
 
+  it('does not react to keypresses when booting is not successful', function() {
+    var g = Grove({}, receiveOutput)
+    g.turnOn()
+    g.handleKeyDown({keyCode: 32})
+    expect(lastOutput).toContain('Tried to read from system/startup.js, but there is no such entry')
+  })
+
   it('renders an error when the startup file has a syntax error', function() {
     var files = {
       'system/startup.js':
@@ -180,5 +187,18 @@ describe('Grove', function() {
     g.handleKeyUp({keyCode: 32})
 
     expect(lastOutput).toEqual(['keyUp: 32'])
+  })
+
+  it('does not react to keyboard events when turned off', function() {
+    var files = {
+      'system/startup.js':
+        'function main() { return "oops" }'
+    }
+    var g = Grove(files, receiveOutput)
+    g.handleKeyDown({keyCode: 32})
+    expect(lastOutput).toEqual([])
+
+    g.handleKeyUp({keyCode: 32})
+    expect(lastOutput).toEqual([])
   })
 })

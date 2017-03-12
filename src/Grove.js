@@ -24,7 +24,7 @@ function Grove (files, printTrustedOutput) {
 
   var on      = false
   var entries = Immutable.Map(files)
-  var main    = function() {}
+  var main    = null
 
   // === Public interface declaration =====================
 
@@ -72,10 +72,14 @@ function Grove (files, printTrustedOutput) {
   }
 
   function handleKeyDown(event) {
+    if (!isOn()) return;
+
     runMainAndPrintOutput({type: 'keyDown', key: event.keyCode})
   }
 
   function handleKeyUp(event) {
+    if (!isOn()) return;
+
     runMainAndPrintOutput({type: 'keyUp', key: event.keyCode})
   }
 
@@ -96,6 +100,8 @@ function Grove (files, printTrustedOutput) {
   }
 
   function runMainAndPrintOutput(event) {
+    if (!main) return
+
     var output = main(event)
 
     if (output === undefined) {
