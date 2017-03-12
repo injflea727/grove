@@ -72,14 +72,10 @@ function Grove (files, printTrustedOutput) {
   }
 
   function handleKeyDown(event) {
-    if (!isOn()) return;
-
     runMainAndPrintOutput({type: 'keyDown', key: event.keyCode})
   }
 
   function handleKeyUp(event) {
-    if (!isOn()) return;
-
     runMainAndPrintOutput({type: 'keyUp', key: event.keyCode})
   }
 
@@ -100,7 +96,7 @@ function Grove (files, printTrustedOutput) {
   }
 
   function runMainAndPrintOutput(event) {
-    if (!main) return
+    if (!main || !isOn()) return
 
     var output = main(event)
 
