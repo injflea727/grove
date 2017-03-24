@@ -98,9 +98,11 @@ restarts of the computer.
 
 Most of the time, the programs you use will
 interact with the data storage system on your behalf. However,
-you can also read and write to data storage directly by
-clicking the `View` and `Edit` buttons on the right side of
-the computer's case.
+you can also write to data storage directly by
+clicking the small button on the right side of
+the computer's case. This is the only way to install an
+operating system on a Grove computer that doesn't yet have
+one.
 
 ### Starting up
 
@@ -114,7 +116,7 @@ explain what went wrong.
 Here is an example `system/startup.js`:
 
 ```javascript
-main() {
+function main() {
   return 'Hello, world!'
 }
 ```
@@ -132,8 +134,8 @@ computer started up.
 
 ```javascript
 var count = 0
-main(event) {
-  if (event.type === KEY_PRESS) {
+function main(event) {
+  if (event.type === 'keyDown') {
     count++
   }
   return 'Keys pressed: ' + count
@@ -150,25 +152,14 @@ An event can be any of the following:
 - a web request returning some data or failing
 - an animation timer ticking ahead to a new frame
 
-### Event Structure
+The `main` function also receives the current state of the
+data storage system as its second argument.
 
-```
-{
-  type: [KEY_PRESS | KEY_RELEASE | TIMER | ANIMATION_TIMER | ... ],
-  dataEntries: Immutable.Map<string, string>,
-  random: number,
-  datetime: Date,
-}
-```
+Here is an example of a program that reads from data storage
+to print its own source code.
 
-### Command Structure
-
-```
-{
-  display: DisplayLines,
-  dataEntries: Immutable.Map<string, string>,
-  timerPeriodMs: number,
-  animationTimerEnabled: boolean,
-  midi: TBD
+```javascript
+function main(event, data) {
+  return data.read('system/startup.js').split('\n')
 }
 ```
