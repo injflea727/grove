@@ -1,6 +1,6 @@
 function stringToHTML(s) {
   var ESC='\33'
-  var segments = s.split(ESC)
+  var segments = htmlEscape(s).split(ESC)
   var output = segments[0]
 
   var spanOpen = false
@@ -12,6 +12,16 @@ function stringToHTML(s) {
   function closeAnyOpenSpan() {
     if (spanOpen) {
       output += '</span>'
+      spanOpen = false
+    }
+  }
+
+  function openNewSpan() {
+    if (currentForeground || currentBackground) {
+      output += '<span class="'
+        + className(currentForeground, currentBackground)
+        + '">'
+      spanOpen = true
     }
   }
 
@@ -19,13 +29,19 @@ function stringToHTML(s) {
     var formatCode = segments[i].charAt(0)
     var text = segments[i].slice(1)
 
-    if (isForeground(formatCode)
+    if (formatCode === 'x') {
+      // clear the current foreground
+      currentForeground = null
+    } else if (isForeground(formatCode)
       && currentForeground !== formatCode) {
 
       currentForeground = formatCode
     }
 
-    if (isBackground(formatCode)
+    if (formatCode === 'X') {
+      // clear the current background
+      currentBackground = null
+    } else if (isBackground(formatCode)
       && currentBackground !== formatCode) {
 
       currentBackground = formatCode
@@ -36,13 +52,10 @@ function stringToHTML(s) {
       || currentBackground !== backgroundInSpan)) {
 
       closeAnyOpenSpan()
-      output += '<span class="'
-        + className(currentForeground, currentBackground)
-        + '">'
+      openNewSpan()
 
       foregroundInSpan = currentForeground
       backgroundInSpan = currentBackground
-      spanOpen = true
     }
 
     output += text
@@ -91,4 +104,11 @@ function isBackground(formatCode) {
     || formatCode === 'O'
     || formatCode === 'V'
     || formatCode === 'W'
+}
+
+function htmlEscape(string) {
+  return string.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
 }
