@@ -110,14 +110,14 @@ describe('Grove', function() {
     expect(lastOutput).toEqual(['&lt;script&gt;hacked&amp;'])
   })
 
-  it('allows main() to format text using FancyText', function() {
+  it('allows main() to format text with escape codes', function() {
     var files = {
       'system/startup.js':
-        'function main() { return T("hello", {text: "blue", highlight: "green"}) }'
+        'function main() { return "\\x1bb\\x1bGhello" }'
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['<span style="color:blue;background-color:green">hello</span>'])
+    expect(lastOutput).toEqual(['<span class="fg-b bg-g">hello</span>'])
   })
 
   it('allows main() to return output as an array', function() {

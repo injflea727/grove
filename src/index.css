@@ -144,6 +144,13 @@ body {
   overflow: hidden;
 }
 
+#terminal > p span {
+  /* make the spans' background color cover the entire line
+   */
+  display: inline-block;
+  height: 16.8px;
+}
+
 #controls {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -197,3 +204,34 @@ body {
   right: 36px;
   bottom: 42px;
 }
+
+.fg-c { color: cyan; }
+.fg-m { color: magenta; }
+.fg-y { color: yellow; }
+.fg-k { color: black; }
+.fg-r { color: red; }
+.fg-g { color: green; }
+.fg-b { color: blue; }
+.fg-o { color: orange; }
+.fg-p { color: purple; }
+.fg-v { color: violet; }
+.fg-w { color: white; }
+.fg-s { color: silver; }
+.fg-d { color: dimgray; }
+.fg-l { color: goldenrod; }
+.fg-n { color: saddlebrown; }
+
+.bg-c { background-color: cyan; }
+.bg-m { background-color: magenta; }
+.bg-y { background-color: yellow; }
+.bg-k { background-color: black; }
+.bg-r { background-color: red; }
+.bg-g { background-color: green; }
+.bg-b { background-color: blue; }
+.bg-o { background-color: orange; }
+.bg-v { background-color: violet; }
+.bg-w { background-color: white; }
+.bg-s { background-color: silver; }
+.bg-d { background-color: dimgray; }
+.bg-l { background-color: goldenrod; }
+.bg-n { background-color: saddlebrown; }

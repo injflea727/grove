@@ -117,7 +117,7 @@ function Grove (files, printTrustedOutput) {
     }
 
     printTrustedOutput(output.map(function(line) {
-      return FancyText(line).toString()
+      return stringToHTML(line)
     }))
   }
 

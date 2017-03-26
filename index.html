@@ -151,6 +151,13 @@ body {
   overflow: hidden;
 }
 
+#terminal > p span {
+  /* make the spans' background color cover the entire line
+   */
+  display: inline-block;
+  height: 16.8px;
+}
+
 #controls {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -204,6 +211,37 @@ body {
   right: 36px;
   bottom: 42px;
 }
+
+.fg-c { color: cyan; }
+.fg-m { color: magenta; }
+.fg-y { color: yellow; }
+.fg-k { color: black; }
+.fg-r { color: red; }
+.fg-g { color: green; }
+.fg-b { color: blue; }
+.fg-o { color: orange; }
+.fg-p { color: purple; }
+.fg-v { color: violet; }
+.fg-w { color: white; }
+.fg-s { color: silver; }
+.fg-d { color: dimgray; }
+.fg-l { color: goldenrod; }
+.fg-n { color: saddlebrown; }
+
+.bg-c { background-color: cyan; }
+.bg-m { background-color: magenta; }
+.bg-y { background-color: yellow; }
+.bg-k { background-color: black; }
+.bg-r { background-color: red; }
+.bg-g { background-color: green; }
+.bg-b { background-color: blue; }
+.bg-o { background-color: orange; }
+.bg-v { background-color: violet; }
+.bg-w { background-color: white; }
+.bg-s { background-color: silver; }
+.bg-d { background-color: dimgray; }
+.bg-l { background-color: goldenrod; }
+.bg-n { background-color: saddlebrown; }
     </style>
     <script>
 /*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
@@ -352,58 +390,120 @@ DataStorage = function(entries) {
 
   return dataStorage
 }
+function stringToHTML(s) {
+  var ESC='\33'
+  var segments = htmlEscape(s).split(ESC)
+  var output = segments[0]
+
+  var spanOpen = false
+  var currentForeground = null
+  var currentBackground = null
+  var foregroundInSpan = null
+  var backgroundInSpan = null
+
+  function closeAnyOpenSpan() {
+    if (spanOpen) {
+      output += '</span>'
+      spanOpen = false
+    }
+  }
+
+  function openNewSpan() {
+    if (currentForeground || currentBackground) {
+      output += '<span class="'
+        + className(currentForeground, currentBackground)
+        + '">'
+      spanOpen = true
+    }
+  }
+
+  for (var i = 1; i < segments.length; i++) {
+    var formatCode = segments[i].charAt(0)
+    var text = segments[i].slice(1)
+
+    if (formatCode === 'x') {
+      // clear the current foreground
+      currentForeground = null
+    } else if (isForeground(formatCode)
+      && currentForeground !== formatCode) {
+
+      currentForeground = formatCode
+    }
+
+    if (formatCode === 'X') {
+      // clear the current background
+      currentBackground = null
+    } else if (isBackground(formatCode)
+      && currentBackground !== formatCode) {
+
+      currentBackground = formatCode
+    }
+
+    if (text &&
+      (  currentForeground !== foregroundInSpan
+      || currentBackground !== backgroundInSpan)) {
+
+      closeAnyOpenSpan()
+      openNewSpan()
+
+      foregroundInSpan = currentForeground
+      backgroundInSpan = currentBackground
+    }
+
+    output += text
+  }
+
+  closeAnyOpenSpan()
+
+  return output
+}
+
+function className(fg, bg) {
+  var output = ''
+  if (fg) {
+    output += 'fg-' + fg
+    if (bg) {
+      output += ' '
+    }
+  }
+  if (bg) {
+    output += 'bg-' + bg.toLowerCase()
+  }
+  return output
+}
+
+function isForeground(formatCode) {
+  return formatCode === 'c'
+    || formatCode === 'm'
+    || formatCode === 'y'
+    || formatCode === 'k'
+    || formatCode === 'r'
+    || formatCode === 'g'
+    || formatCode === 'b'
+    || formatCode === 'o'
+    || formatCode === 'v'
+    || formatCode === 'w'
+}
+
+function isBackground(formatCode) {
+  return formatCode === 'C'
+    || formatCode === 'M'
+    || formatCode === 'Y'
+    || formatCode === 'K'
+    || formatCode === 'R'
+    || formatCode === 'G'
+    || formatCode === 'B'
+    || formatCode === 'O'
+    || formatCode === 'V'
+    || formatCode === 'W'
+}
+
 function htmlEscape(string) {
   return string.toString()
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
 }
-
-
-function escapeIfString(s) {
-  return typeof s === 'string'
-    ? htmlEscape(s)
-    : s
-}
-
-function FancyText(s, format) {
-  var parts = [
-    {string: s, format: format}
-  ]
-
-  var self
-  return self = {
-    toString: function() {
-      return parts.map(function(p) {
-        if (p.format) {
-          return '<span style="'
-            + formatObjectToStyleString(p.format)
-            + '">' + escapeIfString(p.string) + '</span>'
-        } else {
-          return '' + escapeIfString(p.string)
-        }
-      }).join('')
-    },
-
-    append: function(s, format) {
-      parts.push({string: s, format: format})
-      return self
-    }
-  }
-}
-
-function formatObjectToStyleString(format) {
-  var out = []
-  if (format.text) {
-    out.push('color:' + format.text)
-  }
-  if (format.highlight) {
-    out.push('background-color:' + format.highlight)
-  }
-  return out.join(';')
-}
-
-var T = FancyText
 function formatDateForFilename(date) {
   var parts = date.toISOString().split(/[\-T:\.]/)
   return parts[0] + parts[1] + parts[2]
@@ -528,7 +628,7 @@ function Grove (files, printTrustedOutput) {
     }
 
     printTrustedOutput(output.map(function(line) {
-      return FancyText(line).toString()
+      return stringToHTML(line)
     }))
   }
 
