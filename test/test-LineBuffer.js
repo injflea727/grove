@@ -90,4 +90,64 @@ describe('LineBuffer', function() {
     expect(LineBuffer(initial).paste(toPaste, 65).toHTML())
       .toBe(expected)
   })
+
+  it('makes the entire line bold', function() {
+    var text = 'hello'
+    var format = {bold: true}
+    var expected
+      = '<span class="bold">'
+      + 'hello                           '
+      + '                                '
+      + '</span>'
+
+    expect(LineBuffer(text, format).toHTML()).toBe(expected)
+  })
+
+  it('makes the entire line italic', function() {
+    var text = 'hello'
+    var format = {italic: true}
+    var expected
+      = '<span class="italic">'
+      + 'hello                           '
+      + '                                '
+      + '</span>'
+
+    expect(LineBuffer(text, format).toHTML()).toBe(expected)
+  })
+
+  it('makes the entire line underlined', function() {
+    var text = 'hello'
+    var format = {underlined: true}
+    var expected
+      = '<span class="underlined">'
+      + 'hello                           '
+      + '                                '
+      + '</span>'
+
+    expect(LineBuffer(text, format).toHTML()).toBe(expected)
+  })
+
+  it('makes the entire line bold and italic', function() {
+    var text = 'hello'
+    var format = {bold: true, italic: true}
+    var expected
+      = '<span class="bold italic">'
+      + 'hello                           '
+      + '                                '
+      + '</span>'
+
+    expect(LineBuffer(text, format).toHTML()).toBe(expected)
+  })
+
+  xit('formats pasted text', function() {
+    var text = 'hello'
+    var fmt = {bold: true}
+    var expected
+      = 'hello <span class="bold">world</span>'
+      + '                     '
+      + '                                '
+
+    expect(LineBuffer(text).paste('world', 6, fmt).toHTML())
+      .toBe(expected)
+  })
 })

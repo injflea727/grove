@@ -10,15 +10,21 @@
  * The LineBuffer escapes HTML input, so untrusted text
  * may be passed in.
  */
-function LineBuffer(_text) {
+function LineBuffer(_text, _format) {
   // --- State variable declarations -----------------------
 
   var self
   var text
+  var isBold
+  var isItalic
+  var isUnderlined
 
   // --- Initialization ------------------------------------
 
-  text = _64_SPACES; paste(_text)
+  text         = _64_SPACES; paste(_text)
+  isBold       = _format && _format.bold
+  isItalic     = _format && _format.italic
+  isUnderlined = _format && _format.underlined
 
   // --- Public interface declaration ----------------------
 
@@ -30,7 +36,26 @@ function LineBuffer(_text) {
   // --- Public method definitions -------------------------
 
   function toHTML() {
-    return htmlEscape(makeScreenWidth(text))
+    var escaped = htmlEscape(makeScreenWidth(text))
+
+    var classes = []
+    if (isBold) {
+      classes.push('bold')
+    }
+    if (isItalic) {
+      classes.push('italic')
+    }
+    if (isUnderlined) {
+      classes.push('underlined')
+    }
+
+    if (classes.length) {
+      return '<span class="' + classes.join(' ') + '">'
+        + escaped
+        + '</span>'
+    } else {
+      return escaped
+    }
   }
 
   function paste(added, index) {
