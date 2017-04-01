@@ -12,6 +12,6 @@ function LineBuffer(text) {
   }
 
   function toHTML() {
-    return makeScreenWidth(text)
+    return htmlEscape(makeScreenWidth(text))
   }
 }

@@ -32,4 +32,14 @@ describe('LineBuffer', function() {
     expect(LineBuffer(input).toHTML()).toBe(expected)
     expect(LineBuffer(input).toHTML().length).toBe(64)
   })
+
+  it('escapes HTML special characters', function() {
+    var input = '<&>'
+    var expected
+      = '&lt;&amp;&gt;'
+      + '                             '
+      + '                                '
+
+    expect(LineBuffer(input).toHTML()).toBe(expected)
+  })
 })
