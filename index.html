@@ -16,6 +16,7 @@ body {
   padding-top: 18px;
   background-image: linear-gradient(to bottom, #bcd 0px, #9ab 550px, #543 550px, #765 1400px);
   font-family: Helvetica, Arial, sans-serif;
+  overflow-y: hidden;
 }
 
 #overlay {
@@ -105,6 +106,14 @@ body {
   border-right: 4px solid #998;
 
   box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+}
+
+/* Ensure all UI elements are visible on smaller screens,
+ * e.g. Chromebooks */
+@media screen and (max-height: 768px) {
+  #case {
+    margin-top: -44px;
+  }
 }
 
 #bezel {
