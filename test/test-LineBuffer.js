@@ -93,7 +93,7 @@ describe('LineBuffer', function() {
 
   it('makes the entire line bold', function() {
     var text = 'hello'
-    var format = {bold: true}
+    var format = {b: 1}
     var expected
       = '<span class="bold">'
       + 'hello                           '
@@ -105,7 +105,7 @@ describe('LineBuffer', function() {
 
   it('makes the entire line italic', function() {
     var text = 'hello'
-    var format = {italic: true}
+    var format = {i: true}
     var expected
       = '<span class="italic">'
       + 'hello                           '
@@ -117,7 +117,7 @@ describe('LineBuffer', function() {
 
   it('makes the entire line underlined', function() {
     var text = 'hello'
-    var format = {underlined: true}
+    var format = {u: true}
     var expected
       = '<span class="underlined">'
       + 'hello                           '
@@ -129,7 +129,7 @@ describe('LineBuffer', function() {
 
   it('makes the entire line bold and italic', function() {
     var text = 'hello'
-    var format = {bold: true, italic: true}
+    var format = {b: true, i: true}
     var expected
       = '<span class="bold italic">'
       + 'hello                           '
@@ -139,9 +139,9 @@ describe('LineBuffer', function() {
     expect(LineBuffer(text, format).toHTML()).toBe(expected)
   })
 
-  xit('formats pasted text', function() {
+  it('formats pasted text', function() {
     var text = 'hello'
-    var fmt = {bold: true}
+    var fmt = {b: true}
     var expected
       = 'hello <span class="bold">world</span>'
       + '                     '
@@ -149,5 +149,55 @@ describe('LineBuffer', function() {
 
     expect(LineBuffer(text).paste('world', 6, fmt).toHTML())
       .toBe(expected)
+  })
+
+  it('performance benchmark', function() {
+    var t0 = +new Date()
+    Array(32000).map(function() {
+      return LineBuffer('foo')
+        .paste('bar', 3, {b: 1})
+        .paste('baz', 6, {i: 1})
+        .paste('foo', 9, {u: 1})
+        .paste('bar', 12)
+        .paste('baz', 15, {b: 1})
+    }).map(function(buffer) {
+      return buffer.toHTML()
+    })
+
+    var t1 = +new Date()
+    console.log('LineBuffer took ' + (t1 - t0) + 'ms')
+  })
+})
+
+describe('edges', function() {
+  it('returns an empty list given an empty list', function() {
+    expect(edges([])).toEqual([])
+  })
+
+  it('returns an empty list given a list where every element is the same', function() {
+    expect(edges([1,1,1])).toEqual([])
+  })
+
+  it('returns the index of an edge in the list', function() {
+    expect(edges([1,2])).toEqual([1])
+  })
+
+  it('returns the indices of multiple edges in the list', function() {
+    expect(edges([1,1,2,2,1])).toEqual([2,4])
+  })
+})
+
+describe('splitAtIndices', function() {
+  it('works for an empty list of indices', function() {
+    expect(splitAtIndices([], '')).toEqual([''])
+    expect(splitAtIndices([], 'foo')).toEqual(['foo'])
+  })
+
+  it('splits at index 1', function() {
+    expect(splitAtIndices([1], 'foo')).toEqual(['f', 'oo'])
+  })
+
+  it('splits at multiple indices', function() {
+    expect(splitAtIndices([1, 2], 'foo')).toEqual(['f', 'o', 'o'])
   })
 })
