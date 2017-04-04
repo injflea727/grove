@@ -223,6 +223,18 @@ body {
   bottom: 42px;
 }
 
+.bold {
+  text-shadow: 1px 0;
+}
+
+.italic {
+  transform: skewX(-12deg);
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
 .fg-c { color: cyan; }
 .fg-m { color: magenta; }
 .fg-y { color: yellow; }
@@ -401,112 +413,119 @@ DataStorage = function(entries) {
 
   return dataStorage
 }
-function stringToHTML(s) {
-  var ESC='\33'
-  var segments = htmlEscape(s).split(ESC)
-  var output = segments[0]
+function formatDateForFilename(date) {
+  var parts = date.toISOString().split(/[\-T:\.]/)
+  return parts[0] + parts[1] + parts[2]
+      + '-' + parts[3] + parts[4] + parts[5]
+}
+/**
+ * A LineBuffer object represents a single line of output
+ * as displayed on the Grove's screen.
+ *
+ * As such, it is limited to a 64-character width. When
+ * text is added to the LineBuffer, a style object may also
+ * be given to colorize or add bold/italic/underline styling
+ * to the added text.
+ *
+ * The LineBuffer escapes HTML input, so untrusted text
+ * may be passed in.
+ */
+function LineBuffer(_text, _style) {
+  // --- State variable declarations -----------------------
 
-  var spanOpen = false
-  var currentForeground = null
-  var currentBackground = null
-  var foregroundInSpan = null
-  var backgroundInSpan = null
-
-  function closeAnyOpenSpan() {
-    if (spanOpen) {
-      output += '</span>'
-      spanOpen = false
-    }
+  var self
+  var text
+  var perCharStyle = []
+  for (var i = 0; i < 64; i++) {
+    perCharStyle.push(Style(_style))
   }
 
-  function openNewSpan() {
-    if (currentForeground || currentBackground) {
-      output += '<span class="'
-        + className(currentForeground, currentBackground)
-        + '">'
-      spanOpen = true
-    }
+  // --- Initialization ------------------------------------
+
+  text         = _64_SPACES; paste(_text)
+  isBold       = _style && _style.bold
+  isItalic     = _style && _style.italic
+  isUnderlined = _style && _style.underlined
+
+  // --- Public interface declaration ----------------------
+
+  return self = {
+    toHTML: toHTML,
+    paste:  paste,
+    type:   LineBuffer.type
   }
 
-  for (var i = 1; i < segments.length; i++) {
-    var formatCode = segments[i].charAt(0)
-    var text = segments[i].slice(1)
+  // --- Public method definitions -------------------------
 
-    if (formatCode === 'x') {
-      // clear the current foreground
-      currentForeground = null
-    } else if (isForeground(formatCode)
-      && currentForeground !== formatCode) {
+  function toHTML() {
+    var escaped = htmlEscape(makeScreenWidth(text))
+    var perCharClasses = perCharStyle.map(function(s) {
+      return s.toHTMLClasses()
+    })
 
-      currentForeground = formatCode
-    }
+    var classEdges = edges(perCharClasses)
+    segments = splitAtIndices(classEdges, escaped)
 
-    if (formatCode === 'X') {
-      // clear the current background
-      currentBackground = null
-    } else if (isBackground(formatCode)
-      && currentBackground !== formatCode) {
+    var pos = 0
+    return segments.map(function(seg) {
+      var cls = perCharClasses[pos]
+      pos += seg.length
 
-      currentBackground = formatCode
-    }
-
-    if (text &&
-      (  currentForeground !== foregroundInSpan
-      || currentBackground !== backgroundInSpan)) {
-
-      closeAnyOpenSpan()
-      openNewSpan()
-
-      foregroundInSpan = currentForeground
-      backgroundInSpan = currentBackground
-    }
-
-    output += text
+      if (!cls) {
+        return seg
+      } else {
+        return '<span class="' + cls + '">'
+          + seg
+          + '</span>'
+      }
+    }).join('')
   }
 
-  closeAnyOpenSpan()
+  function paste(added, start, style) {
+    if (added === undefined) {
+      added = ''
+    }
+    start = start || 0
+    var end = start + added.length
+    text = text.slice(0, start)
+      + added
+      + text.slice(end)
 
+    for (var i = start; i < end && i < 64; i++) {
+      perCharStyle[i].overlay(style)
+    }
+
+    return self
+  }
+}
+
+LineBuffer.type = {}
+
+var _64_SPACES
+  = '                                '
+  + '                                '
+
+function makeScreenWidth(s) {
+  return (s + _64_SPACES.slice(s.length)).slice(0, 64)
+}
+
+function edges(list) {
+  var output = []
+  for (var i = 1; i < list.length; i++) {
+    if (list[i] !== list[i - 1]) {
+      output.push(i)
+    }
+  }
   return output
 }
 
-function className(fg, bg) {
-  var output = ''
-  if (fg) {
-    output += 'fg-' + fg
-    if (bg) {
-      output += ' '
-    }
+function splitAtIndices(indices, string) {
+  if (!indices.length) return [string]
+  var segments = []
+  for (var i = -1; i < indices.length; i++) {
+    segments.push(string.slice(+indices[i], indices[i+1]))
   }
-  if (bg) {
-    output += 'bg-' + bg.toLowerCase()
-  }
-  return output
-}
-
-function isForeground(formatCode) {
-  return formatCode === 'c'
-    || formatCode === 'm'
-    || formatCode === 'y'
-    || formatCode === 'k'
-    || formatCode === 'r'
-    || formatCode === 'g'
-    || formatCode === 'b'
-    || formatCode === 'o'
-    || formatCode === 'v'
-    || formatCode === 'w'
-}
-
-function isBackground(formatCode) {
-  return formatCode === 'C'
-    || formatCode === 'M'
-    || formatCode === 'Y'
-    || formatCode === 'K'
-    || formatCode === 'R'
-    || formatCode === 'G'
-    || formatCode === 'B'
-    || formatCode === 'O'
-    || formatCode === 'V'
-    || formatCode === 'W'
+  return segments
 }
 
 function htmlEscape(string) {
@@ -515,10 +534,27 @@ function htmlEscape(string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
 }
-function formatDateForFilename(date) {
-  var parts = date.toISOString().split(/[\-T:\.]/)
-  return parts[0] + parts[1] + parts[2]
-      + '-' + parts[3] + parts[4] + parts[5]
+function Style(_s) {
+  var self
+  var s = Object.assign({}, _s || {})
+
+  return self = {
+    toHTMLClasses: toHTMLClasses,
+    overlay:       overlay
+  }
+
+  function toHTMLClasses() {
+    var classes = []
+    if (s.b) classes.push('bold')
+    if (s.i) classes.push('italic')
+    if (s.u) classes.push('underlined')
+    return classes.join(' ')
+  }
+
+  function overlay(_s) {
+    Object.assign(s, _s)
+    return self
+  }
 }
 /**
  * The purpose of wrappedEval is to limit the set of
@@ -605,7 +641,8 @@ function Grove (files, printTrustedOutput) {
 
   function runnableStartupScript (src) {
     return '(function(){'
-      + 'var ' + Object.keys(getGlobalObject()).join(',')
+      + 'var ' + Object.keys(getGlobalObject())
+        .filter(notWhitelistedGlobal).join(',')
       + ';' + src
       + 'return main'
       + '})()'
@@ -638,8 +675,14 @@ function Grove (files, printTrustedOutput) {
       output = [output]
     }
 
+    for (var i = 0; i < output.length; i++) {
+      if (output[i].type !== LineBuffer.type) {
+        output[i] = LineBuffer(output[i])
+      }
+    }
+
     printTrustedOutput(output.map(function(line) {
-      return stringToHTML(line)
+      return line.toHTML()
     }))
   }
 
@@ -677,6 +720,10 @@ function Grove (files, printTrustedOutput) {
 
   function getName() {
     return data.read('system/name') || 'grove'
+  }
+
+  function notWhitelistedGlobal(varName) {
+    return varName !== 'LineBuffer'
   }
 }
 ;(function() {

@@ -83,7 +83,8 @@ function Grove (files, printTrustedOutput) {
 
   function runnableStartupScript (src) {
     return '(function(){'
-      + 'var ' + Object.keys(getGlobalObject()).join(',')
+      + 'var ' + Object.keys(getGlobalObject())
+        .filter(notWhitelistedGlobal).join(',')
       + ';' + src
       + 'return main'
       + '})()'
@@ -116,8 +117,14 @@ function Grove (files, printTrustedOutput) {
       output = [output]
     }
 
+    for (var i = 0; i < output.length; i++) {
+      if (output[i].type !== LineBuffer.type) {
+        output[i] = LineBuffer(output[i])
+      }
+    }
+
     printTrustedOutput(output.map(function(line) {
-      return stringToHTML(line)
+      return line.toHTML()
     }))
   }
 
@@ -155,5 +162,9 @@ function Grove (files, printTrustedOutput) {
 
   function getName() {
     return data.read('system/name') || 'grove'
+  }
+
+  function notWhitelistedGlobal(varName) {
+    return varName !== 'LineBuffer'
   }
 }

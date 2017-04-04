@@ -65,7 +65,7 @@ describe('Grove', function() {
     g.editEntry('system/startup.js', 'function main() { return "it works" }')
     g.turnOn()
 
-    expect(lastOutput).toEqual(['it works'])
+    expect(lastOutput[0]).toContain('it works')
   })
 
   it('renders the output of main() when the startup file is valid', function() {
@@ -75,7 +75,7 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['hello'])
+    expect(lastOutput[0]).toContain(['hello'])
   })
 
   it('does not allow the main() function to access Grove-defined functions', function() {
@@ -107,17 +107,19 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['&lt;script&gt;hacked&amp;'])
+    expect(lastOutput[0]).toContain('&lt;script&gt;hacked&amp;')
   })
 
-  it('allows main() to format text with escape codes', function() {
+  it('allows main() to format text with LineBuffer', function() {
     var files = {
       'system/startup.js':
-        'function main() { return "\\x1bb\\x1bGhello" }'
+        'function main() { '
+        + 'return LineBuffer().paste("hello", 0, {b: 1})'
+        + '}'
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['<span class="fg-b bg-g">hello</span>'])
+    expect(lastOutput[0]).toContain('<span class="bold">hello</span>')
   })
 
   it('allows main() to return output as an array', function() {
@@ -127,7 +129,8 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['line 1', 'line 2'])
+    expect(lastOutput[0]).toContain('line 1')
+    expect(lastOutput[1]).toContain('line 2')
   })
 
   it('allows main() to return output as an object with a "screen" property', function() {
@@ -137,7 +140,7 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['foo'])
+    expect(lastOutput[0]).toContain('foo')
   })
 
   it('has a name, read from system/name', function() {
@@ -169,10 +172,10 @@ describe('Grove', function() {
     var g = Grove(files, receiveOutput)
 
     g.turnOn()
-    expect(lastOutput).toEqual(['startup: undefined'])
+    expect(lastOutput[0]).toContain('startup: undefined')
     g.handleKeyDown({keyCode: 32})
 
-    expect(lastOutput).toEqual(['keyDown: 32'])
+    expect(lastOutput[0]).toContain('keyDown: 32')
   })
 
   it('passes the key code to main() when a key is released', function() {
@@ -183,10 +186,10 @@ describe('Grove', function() {
     var g = Grove(files, receiveOutput)
 
     g.turnOn()
-    expect(lastOutput).toEqual(['startup: undefined'])
+    expect(lastOutput[0]).toContain('startup: undefined')
     g.handleKeyUp({keyCode: 32})
 
-    expect(lastOutput).toEqual(['keyUp: 32'])
+    expect(lastOutput[0]).toContain('keyUp: 32')
   })
 
   it('does not react to keyboard events when turned off', function() {
@@ -215,9 +218,9 @@ describe('Grove', function() {
 
     var g = Grove(files, receiveOutput)
     g.turnOn()
-    expect(lastOutput).toEqual(['0'])
+    expect(lastOutput[0]).toContain('0')
     g.handleKeyDown({keyCode: 65})
-    expect(lastOutput).toEqual(['1'])
+    expect(lastOutput[0]).toContain('1')
 
     expect(JSON.parse(g.getDataAsJSON()).count).toBe('2')
   })

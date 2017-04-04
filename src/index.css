@@ -216,6 +216,18 @@ body {
   bottom: 42px;
 }
 
+.bold {
+  text-shadow: 1px 0;
+}
+
+.italic {
+  transform: skewX(-12deg);
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
 .fg-c { color: cyan; }
 .fg-m { color: magenta; }
 .fg-y { color: yellow; }

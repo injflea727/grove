@@ -105,10 +105,3 @@ function isBackground(formatCode) {
     || formatCode === 'V'
     || formatCode === 'W'
 }
-
-function htmlEscape(string) {
-  return string.toString()
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-}

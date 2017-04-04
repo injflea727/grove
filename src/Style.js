@@ -1,6 +1,6 @@
 function Style(_s) {
   var self
-  var s = _s || {}
+  var s = Object.assign({}, _s || {})
 
   return self = {
     toHTMLClasses: toHTMLClasses,

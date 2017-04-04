@@ -1,4 +1,8 @@
 describe('LineBuffer', function() {
+  it('assumes an empty string if instantiated with no args', function() {
+    expect(LineBuffer().toHTML()).toBe(_64_SPACES)
+  })
+
   it('pads a short line to 64 chars', function() {
     var input = 'asdf'
     var expected
@@ -151,6 +155,34 @@ describe('LineBuffer', function() {
       .toBe(expected)
   })
 
+  it('formats text pasted at the beginning of the line', function() {
+    var fmt = {b: true}
+    var expected
+      = '<span class="bold">hello</span>'
+      + '                           '
+      + '                                '
+
+    expect(LineBuffer().paste('hello', 0, fmt).toHTML())
+      .toBe(expected)
+  })
+
+  it('formats text pasted over other formatted text', function() {
+    var bold   = {b: true}
+    var italic = {i: true}
+    var expected
+      = '<span class="bold">hello</span>'
+      + '<span class="bold italic">world</span>'
+      + '<span class="bold">'
+      + '                      '
+      + '                                </span>'
+
+    var actual = LineBuffer('hello', bold)
+      .paste('world', 5, italic)
+      .toHTML()
+
+    expect(actual).toBe(expected)
+  })
+
   it('performance benchmark', function() {
     var t0 = +new Date()
     Array(32000).map(function() {
@@ -166,6 +198,12 @@ describe('LineBuffer', function() {
 
     var t1 = +new Date()
     console.log('LineBuffer took ' + (t1 - t0) + 'ms')
+  })
+
+  it('adds a type property to instances', function() {
+    expect(LineBuffer().type).toBe(LineBuffer.type)
+    expect(LineBuffer().type).toBe(LineBuffer().type)
+    expect(LineBuffer().type).toBeDefined()
   })
 })
 

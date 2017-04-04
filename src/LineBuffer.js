@@ -31,7 +31,8 @@ function LineBuffer(_text, _style) {
 
   return self = {
     toHTML: toHTML,
-    paste:  paste
+    paste:  paste,
+    type:   LineBuffer.type
   }
 
   // --- Public method definitions -------------------------
@@ -45,10 +46,10 @@ function LineBuffer(_text, _style) {
     var classEdges = edges(perCharClasses)
     segments = splitAtIndices(classEdges, escaped)
 
-    return segments.map(function(seg, i) {
-      var cls
-        =  perCharClasses[classEdges[i - 1]]
-        || perCharClasses[0]
+    var pos = 0
+    return segments.map(function(seg) {
+      var cls = perCharClasses[pos]
+      pos += seg.length
 
       if (!cls) {
         return seg
@@ -61,6 +62,9 @@ function LineBuffer(_text, _style) {
   }
 
   function paste(added, start, style) {
+    if (added === undefined) {
+      added = ''
+    }
     start = start || 0
     var end = start + added.length
     text = text.slice(0, start)
@@ -74,6 +78,8 @@ function LineBuffer(_text, _style) {
     return self
   }
 }
+
+LineBuffer.type = {}
 
 var _64_SPACES
   = '                                '
@@ -100,4 +106,11 @@ function splitAtIndices(indices, string) {
     segments.push(string.slice(+indices[i], indices[i+1]))
   }
   return segments
+}
+
+function htmlEscape(string) {
+  return string.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
 }
