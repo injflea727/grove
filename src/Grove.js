@@ -153,13 +153,6 @@ function Grove (files, printTrustedOutput) {
     return global
   }
 
-  function htmlEscape(string) {
-    return string.toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-  }
-
   function getName() {
     return data.read('system/name') || 'grove'
   }
