@@ -12,6 +12,8 @@ function Style(_s) {
     if (s.b) classes.push('bold')
     if (s.i) classes.push('italic')
     if (s.u) classes.push('underlined')
+    if (s.fg) classes.push('fg-' + s.fg)
+    if (s.bg) classes.push('bg-' + s.bg)
     return classes.join(' ')
   }
 

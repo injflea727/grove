@@ -39,4 +39,23 @@ describe('Style', function() {
     expect(Style({b: 1}).overlay({b: 0}).toHTMLClasses())
       .toBe('')
   })
+
+  it('represents foreground colors', function() {
+    expect(Style({fg: 'red'}).toHTMLClasses())
+      .toBe('fg-red')
+  })
+
+  it('represents background colors', function() {
+    expect(Style({bg: 'red'}).toHTMLClasses())
+      .toBe('bg-red')
+  })
+
+  it('overlays foreground and background colors', function() {
+    var classes
+      = Style({bg: 'red'})
+      .overlay({fg: 'blue'})
+      .toHTMLClasses()
+
+    expect(classes).toBe('fg-blue bg-red')
+  })
 })
