@@ -10,6 +10,8 @@ function wrappedEval (code) {
   return eval(code)
 }
 
+var hasOwnProperty = Object.prototype.hasOwnProperty
+
 /**
  * Grove() creates and returns an object representing a
  * Grove computer. It is intended to encapsulate all the
@@ -17,21 +19,33 @@ function wrappedEval (code) {
  * Grove system, while keeping that logic isolated from
  * the browser environment (to make it easier to test).
  */
-function Grove (files, printTrustedOutput) {
+function Grove (
+    files,
+    printTrustedOutput,
+    dataChangeCallback) {
+
   "use strict"
 
   // === State variables ==================================
 
-  var on      = false
-  var data    = DataRecorder(Immutable.Map(files))
-  var main    = null
+  var data = DataRecorder(files, dataChangeCallback)
+  var main = null
+
+  // === Initialization ===================================
+
+  if (getStartupJs()) {
+    try {
+      bootFromStartupScript()
+    } catch(e) {
+      printErrorFromStartup(e)
+    }
+  } else {
+    printStartupJsNotFoundError()
+  }
 
   // === Public interface declaration =====================
 
   return {
-    turnOn:        turnOn,
-    turnOff:       turnOff,
-    isOn:          isOn,
     getName:       getName,
     editEntry:     editEntry,
     getDataAsJSON: getDataAsJSON,
@@ -41,26 +55,8 @@ function Grove (files, printTrustedOutput) {
 
   // === Public function definitions ======================
 
-  function turnOn() {
-    on = true
-    if (getStartupJs()) {
-      try {
-        bootFromStartupScript()
-      } catch(e) {
-        printErrorFromStartup(e)
-      }
-    } else {
-      printStartupJsNotFoundError()
-    }
-  }
-
-  function turnOff() {
-    on = false
-    printTrustedOutput([])
-  }
-
-  function isOn() {
-    return on
+  function getName() {
+    return data.read('system/name') || 'grove'
   }
 
   function editEntry(name, content) {
@@ -72,11 +68,13 @@ function Grove (files, printTrustedOutput) {
   }
 
   function handleKeyDown(event) {
-    runMainAndPrintOutput({type: 'keyDown', key: event.keyCode})
+    var key = event.keyCode
+    runMainAndPrintOutput({type: 'keyDown', key: key})
   }
 
   function handleKeyUp(event) {
-    runMainAndPrintOutput({type: 'keyUp', key: event.keyCode})
+    var key = event.keyCode
+    runMainAndPrintOutput({type: 'keyUp', key: key})
   }
 
   // === Private functions ================================
@@ -97,19 +95,19 @@ function Grove (files, printTrustedOutput) {
   }
 
   function runMainAndPrintOutput(event) {
-    if (!main || !isOn()) return
+    if (!main) return
 
-    var output = main(event, data)
+    var output = main(event, ReadOnly(data))
 
     if (output === undefined) {
       output = '' + output
     }
 
-    if (output.data) {
-      data = output.data
+    if (output.dataCommand) {
+      output.dataCommand.exec(data)
     }
 
-    if (Object.prototype.hasOwnProperty.call(output, 'screen')) {
+    if (hasOwnProperty.call(output, 'screen')) {
       output = output.screen
     }
 
@@ -147,17 +145,16 @@ function Grove (files, printTrustedOutput) {
   }
 
   function getGlobalObject () {
-    if (typeof window !== 'undefined') {
-      return window
+    if (typeof self !== 'undefined') {
+      return self
     }
     return global
   }
 
-  function getName() {
-    return data.read('system/name') || 'grove'
-  }
-
   function notWhitelistedGlobal(varName) {
-    return varName !== 'LineBuffer'
+    return ! (
+         varName === 'LineBuffer'
+      || varName === 'DataCommand'
+      )
   }
 }

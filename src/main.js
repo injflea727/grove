@@ -1,16 +1,13 @@
 ;(function() {
 "use strict"
 
-// assert that necessary globals exist
-if (typeof Immutable !== 'object') throw 'immutable.js not found'
-if (typeof FILES !== 'object') throw 'FILES global not found'
-
 var $ = document.querySelectorAll.bind(document)
 
 // DOM elements
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
 var $filesScript = $('#files')[0]
+var $groveWorkerScript = $('#grove-worker')[0]
 var $modalOverlay = $('#overlay')[0]
 var $hideDataEditorButton = $('#file-modal .close-button button')[0]
 var $showDataEditorButton = $('#data-editor-button')[0]
@@ -19,22 +16,24 @@ var $entryContentInput = $('#file-modal textarea')[0]
 var $dataEditorSaveButton = $('#file-modal .save')[0]
 var $title = $('head title')[0]
 
+var dataRecords = FILES
+
 function click(elem, callback) {
   elem.addEventListener('click', callback)
 }
 
-function setTitleToComputerName() {
-  $title.innerText = grove.getName()
+function setTitleTo(title) {
+  $title.innerText = title
 }
 
 var lastSaveTimestamp = +(new Date())
 click($diskSlot, function() {
-  $filesScript.innerText =
-    'var FILES = ' + grove.getDataAsJSON()
+  $filesScript.innerText
+    = 'var FILES = ' + JSON.stringify(dataRecords)
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
-  saveAs(blob, createFilename())
+  saveAs(blob, createFilename(getComputerName()))
   lastSaveTimestamp = +(new Date())
 })
 
@@ -51,14 +50,25 @@ click($dataEditorSaveButton, function() {
   var content = $entryContentInput.value
 
   if (!name) return
-  grove.editEntry(name, content)
+
+  dataRecords[name] = content
+
+  groveWorker.postMessage({
+    type: 'updateDataRecord',
+    name: name,
+    content: content
+  })
 })
 
 click($powerSwitch, function() {
-  if (grove.isOn()) {
-    grove.turnOff()
+  if (groveWorker) {
+    // turn off
+    groveWorker.terminate()
+    groveWorker = null
+    redraw([])
   } else {
-    grove.turnOn()
+    // turn on
+    groveWorker = GroveWorker()
   }
 })
 
@@ -69,13 +79,17 @@ function redraw(text) {
   }
 }
 
-function createFilename() {
+function createFilename(computerName) {
   var date = new Date()
-  return grove.getName() + '-' + formatDateForFilename(date)
+  return computerName + '-' + formatDateForFilename(date)
 }
 
 function shouldWarnAboutUnsavedChanges() {
   return +(new Date()) - lastSaveTimestamp > 30 * 1000
+}
+
+function getComputerName() {
+  return dataRecords['system/name'] || 'grove'
 }
 
 window.addEventListener('beforeunload', function(e) {
@@ -86,15 +100,43 @@ window.addEventListener('beforeunload', function(e) {
 })
 
 window.addEventListener('keydown', function(e) {
-  grove.handleKeyDown(e)
+  if (groveWorker) { // TODO refactor to null object pattern
+    groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
+  }
 })
 
 window.addEventListener('keyup', function(e) {
-  grove.handleKeyUp(e)
+  if (groveWorker) {
+    groveWorker.postMessage({type: 'keyUp', event: {keyCode: e.keyCode}})
+  }
 })
 
-var grove = Grove(FILES, redraw)
-grove.turnOn()
-setTitleToComputerName()
+function handleMessageFromWorker(msg) {
+  switch (msg.data.type) {
+    case 'redraw':
+      redraw(msg.data.value)
+      break
+    case 'dataRecordChange':
+      dataRecords[msg.data.name] = msg.data.content
+      setTitleTo(getComputerName())
+      break
+  }
+}
+
+var groveWorker = GroveWorker()
+setTitleTo(getComputerName())
+
+function GroveWorker() {
+  var scriptBlob = new Blob([
+    'var FILES = ',
+    JSON.stringify(dataRecords),
+    ';',
+    $groveWorkerScript.innerText
+  ])
+
+  var worker = new Worker(URL.createObjectURL(scriptBlob))
+  worker.addEventListener('message', handleMessageFromWorker)
+  return worker
+}
 
 })();

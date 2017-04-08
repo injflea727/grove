@@ -2,7 +2,11 @@
 
 mkdir -p .build-tmp
 
-cat $(find src -name '*.js' | grep -v 'main.js') $(find 'test' -name '*.js') \
+cat $(\
+    find src -name '*.js' \
+    | grep -v 'main.js' \
+    | grep -v 'worker-main.js' \
+  ) $(find 'test' -name '*.js') \
   > .build-tmp/test.js
 
 jasmine .build-tmp/test.js

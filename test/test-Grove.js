@@ -1,44 +1,23 @@
 var Immutable = require('../src/immutable')
 
 describe('Grove', function() {
-  var lastOutput
-  function receiveOutput (output) {
-    lastOutput = output
+  var receiveOutput = jasmine.createSpy('receiveOutput')
+  var handleDataChange = jasmine.createSpy('handleDataChange')
+
+  function lastOutput() {
+    return receiveOutput.calls.mostRecent().args[0]
   }
 
-  beforeEach(function() {
-    lastOutput = []
-  })
-
-  it('is initially off', function() {
+  it('renders an error when there are no files', function() {
     var g = Grove({}, receiveOutput)
-    expect(g.isOn()).toBe(false)
-  })
-
-  it('turns on and off', function() {
-    var g = Grove({}, receiveOutput)
-    g.turnOn()
-    expect(g.isOn()).toBe(true)
-    g.turnOff()
-    expect(g.isOn()).toBe(false)
-  })
-
-  it('initially renders nothing', function() {
-    Grove({}, receiveOutput)
-    expect(lastOutput).toEqual([])
-  })
-
-  it('renders an error when turned on with no files', function() {
-    var g = Grove({}, receiveOutput)
-    g.turnOn()
-    expect(lastOutput).toContain('Tried to read from system/startup.js, but there is no such entry')
+    expect(receiveOutput).toHaveBeenCalledWith(['Tried to read from system/startup.js, but there is no such entry'])
   })
 
   it('does not react to keypresses when booting is not successful', function() {
     var g = Grove({}, receiveOutput)
-    g.turnOn()
     g.handleKeyDown({keyCode: 32})
-    expect(lastOutput).toContain('Tried to read from system/startup.js, but there is no such entry')
+    expect(receiveOutput.calls.mostRecent().args[0])
+      .toEqual(['Tried to read from system/startup.js, but there is no such entry'])
   })
 
   it('renders an error when the startup file has a syntax error', function() {
@@ -47,25 +26,8 @@ describe('Grove', function() {
         'function ()'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput).toContain('An error occurred while starting up:')
-    expect(lastOutput).toContain('SyntaxError: Unexpected token (')
-  })
-
-  it('can be rebooted after an error', function() {
-    var files = {
-      'system/startup.js':
-        'function ()'
-    }
-    var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput).toContain('An error occurred while starting up:')
-
-    g.turnOff()
-    g.editEntry('system/startup.js', 'function main() { return "it works" }')
-    g.turnOn()
-
-    expect(lastOutput[0]).toContain('it works')
+    expect(lastOutput()).toContain('An error occurred while starting up:')
+    expect(lastOutput()).toContain('SyntaxError: Unexpected token (')
   })
 
   it('renders the output of main() when the startup file is valid', function() {
@@ -74,8 +36,7 @@ describe('Grove', function() {
         'function main() { return "hello" }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain(['hello'])
+    expect(lastOutput()[0]).toContain('hello')
   })
 
   it('does not allow the main() function to access Grove-defined functions', function() {
@@ -84,9 +45,8 @@ describe('Grove', function() {
         'function main() { return Grove().toString() }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput).toContain('An error occurred while starting up:')
-    expect(lastOutput).toContain('TypeError: Grove is not a function')
+    expect(lastOutput()).toContain('An error occurred while starting up:')
+    expect(lastOutput()).toContain('TypeError: Grove is not a function')
   })
 
   it('does not allow the main() function to access global functions', function() {
@@ -95,9 +55,8 @@ describe('Grove', function() {
         'function main() { return setTimeout().toString() }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput).toContain('An error occurred while starting up:')
-    expect(lastOutput).toContain('TypeError: setTimeout is not a function')
+    expect(lastOutput()).toContain('An error occurred while starting up:')
+    expect(lastOutput()).toContain('TypeError: setTimeout is not a function')
   })
 
   it('escapes HTML in data output from main()', function() {
@@ -106,8 +65,7 @@ describe('Grove', function() {
         'function main() { return "<script>hacked&" }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain('&lt;script&gt;hacked&amp;')
+    expect(lastOutput()[0]).toContain('&lt;script&gt;hacked&amp;')
   })
 
   it('allows main() to format text with LineBuffer', function() {
@@ -118,8 +76,7 @@ describe('Grove', function() {
         + '}'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain('<span class="bold">hello</span>')
+    expect(lastOutput()[0]).toContain('<span class="bold">hello</span>')
   })
 
   it('allows main() to return output as an array', function() {
@@ -128,9 +85,8 @@ describe('Grove', function() {
         'function main() { return ["line 1", "line 2"] }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain('line 1')
-    expect(lastOutput[1]).toContain('line 2')
+    expect(lastOutput()[0]).toContain('line 1')
+    expect(lastOutput()[1]).toContain('line 2')
   })
 
   it('allows main() to return output as an object with a "screen" property', function() {
@@ -139,8 +95,7 @@ describe('Grove', function() {
         'function main() { return {screen: "foo"} }'
     }
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain('foo')
+    expect(lastOutput()[0]).toContain('foo')
   })
 
   it('has a name, read from system/name', function() {
@@ -152,8 +107,7 @@ describe('Grove', function() {
   })
 
   it('uses "grove" as the default name', function() {
-    var files = {
-    }
+    var files = {}
     var g = Grove(files, receiveOutput)
     expect(g.getName()).toBe('grove')
   })
@@ -171,11 +125,10 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
 
-    g.turnOn()
-    expect(lastOutput[0]).toContain('startup: undefined')
+    expect(lastOutput()[0]).toContain('startup: undefined')
     g.handleKeyDown({keyCode: 32})
 
-    expect(lastOutput[0]).toContain('keyDown: 32')
+    expect(lastOutput()[0]).toContain('keyDown: 32')
   })
 
   it('passes the key code to main() when a key is released', function() {
@@ -185,43 +138,45 @@ describe('Grove', function() {
     }
     var g = Grove(files, receiveOutput)
 
-    g.turnOn()
-    expect(lastOutput[0]).toContain('startup: undefined')
+    expect(lastOutput()[0]).toContain('startup: undefined')
     g.handleKeyUp({keyCode: 32})
 
-    expect(lastOutput[0]).toContain('keyUp: 32')
+    expect(lastOutput()[0]).toContain('keyUp: 32')
   })
 
-  it('does not react to keyboard events when turned off', function() {
-    var files = {
-      'system/startup.js':
-        'function main() { return "oops" }'
-    }
-    var g = Grove(files, receiveOutput)
-    g.handleKeyDown({keyCode: 32})
-    expect(lastOutput).toEqual([])
-
-    g.handleKeyUp({keyCode: 32})
-    expect(lastOutput).toEqual([])
-  })
-
-  it('allows main() to read and write data entries', function() {
+  it('allows main() to read and write data records', function() {
     var files = {
       'system/startup.js':
         'function main(event, data) { '
         + 'var count = +data.read("count") || 0;'
         + 'return {'
         + '  screen: count,'
-        + '  data:   data.write("count", "" + (count+1))'
+        + '  dataCommand: DataCommand.write("count", "" + (count+1))'
         + '} }'
     }
 
     var g = Grove(files, receiveOutput)
-    g.turnOn()
-    expect(lastOutput[0]).toContain('0')
+    expect(lastOutput()[0]).toContain('0')
     g.handleKeyDown({keyCode: 65})
-    expect(lastOutput[0]).toContain('1')
+    expect(lastOutput()[0]).toContain('1')
 
     expect(JSON.parse(g.getDataAsJSON()).count).toBe('2')
+  })
+
+  it('notifies listeners of data record changes', function() {
+    var files = {
+      'system/startup.js':
+        'function main(event, data) { '
+        + 'var count = +data.read("count") || 0;'
+        + 'return {'
+        + '  screen: count,'
+        + '  dataCommand: DataCommand.write("count", "" + (count+1))'
+        + '} }'
+    }
+
+    var g = Grove(files, receiveOutput, handleDataChange)
+    expect(handleDataChange).toHaveBeenCalledWith('count', '1')
+    g.handleKeyDown({keyCode: 65})
+    expect(handleDataChange).toHaveBeenCalledWith('count', '2')
   })
 })

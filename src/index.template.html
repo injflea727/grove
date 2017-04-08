@@ -10,19 +10,16 @@
     <script>
 #include src/fileSaver.js
     </script>
-    <script>
-#include src/immutable.js
-    </script>
   </head>
 
   <body>
     <div id="case">
       <div id="bezel">
         <div id="terminal">
-          <p id="l0">If you can read this, your browser is not recent enough to run</p>
-          <p id="l1">a Grove computer :(</p>
+          <p id="l0">Initializing... </p>
+          <p id="l1"></p>
           <p id="l2"></p>
-          <p id="l3">Please upgrade to the latest version of Google Chrome.</p>
+          <p id="l3"></p>
           <p id="l4"></p>
           <p id="l5"></p>
           <p id="l6"></p>
@@ -83,12 +80,19 @@
 
     </script>
 
-    <script>
+    <!-- this script gets run in a web worker -->
+    <script type="dont-run-in-main-thread" id="grove-worker">
+#include src/immutable.js
 #include src/DataRecorder.js
-#include src/formatDateForFilename.js
+#include src/DataCommand.js
+#include src/ReadOnly.js
 #include src/LineBuffer.js
 #include src/Style.js
 #include src/Grove.js
+#include src/worker-main.js
+    </script>
+    <script>
+#include src/formatDateForFilename.js
 #include src/main.js
     </script>
   </body>
