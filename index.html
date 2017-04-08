@@ -251,7 +251,7 @@ body {
 .fg-goldenrod { color: goldenrod; }
 .fg-saddlebrown { color: saddlebrown; }
 
-.bg-cyanyan { background-color: cyan; }
+.bg-cyan { background-color: cyan; }
 .bg-magenta { background-color: magenta; }
 .bg-yellow { background-color: yellow; }
 .bg-black { background-color: black; }
@@ -359,7 +359,7 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
       <div id="file-modal">
         <div class="close-button">
           <div class="title">
-            Data Storage System Editor
+            Data Recorder
           </div>
           <button>x</button>
         </div>
@@ -379,31 +379,31 @@ qe(this,r)},keySeq:function(){return ut(0,this.size)},last:function(){return thi
     </script>
 
     <script>
-DataStorage = function(entries) {
-  var dataStorage = {}
+DataRecorder = function(entries) {
+  var recorder = {}
 
-  dataStorage.read = function(entryName) {
+  recorder.read = function(entryName) {
     if (isNotString(entryName)) {
-      throw Error('DataStorage#read expects to be called with a string, but got ' + entryName)
+      throw Error('DataRecorder#read expects to be called with a string, but got ' + entryName)
     }
     return entries.get(entryName) || ''
   }
 
-  dataStorage.write = function(entryName, content) {
+  recorder.write = function(entryName, content) {
     if (isNotString(entryName) || isNotString(content)) {
-      throw Error('DataStorage#write expects to be called with two strings, but got ' + entryName + ', ' + content)
+      throw Error('DataRecorder#write expects to be called with two strings, but got ' + entryName + ', ' + content)
     }
     if (content === '') {
-      return dataStorage.delete(entryName)
+      return recorder.delete(entryName)
     }
-    return DataStorage(entries.set(entryName, content))
+    return DataRecorder(entries.set(entryName, content))
   }
 
-  dataStorage.delete = function(entryName) {
-    return DataStorage(entries.delete(entryName))
+  recorder.delete = function(entryName) {
+    return DataRecorder(entries.delete(entryName))
   }
 
-  dataStorage.toJSON = function() {
+  recorder.toJSON = function() {
     return JSON.stringify(entries.toJS())
   }
 
@@ -411,7 +411,7 @@ DataStorage = function(entries) {
     return typeof thing !== 'string'
   }
 
-  return dataStorage
+  return recorder
 }
 function formatDateForFilename(date) {
   var parts = date.toISOString().split(/[\-T:\.]/)
@@ -583,7 +583,7 @@ function Grove (files, printTrustedOutput) {
   // === State variables ==================================
 
   var on      = false
-  var data    = DataStorage(Immutable.Map(files))
+  var data    = DataRecorder(Immutable.Map(files))
   var main    = null
 
   // === Public interface declaration =====================

@@ -87,18 +87,18 @@ web browser.
 
 ## API Reference
 
-### The Data Storage System
+### The Data Recorder
 
-The **data storage system** holds *entries*, which may be documents,
-programs, or any other data. An entry has a *name*, which must be unique among
-all entries in the system. It also has *content*.
+The **Data Recorder** holds *records*, which may be documents,
+programs, or any other data. An record has a *name*, which must be unique among
+all records in the system. It also has *content*.
 
-Data written to the data storage system will persist across
+Data written to the recorder will persist across
 restarts of the computer.
 
 Most of the time, the programs you use will
-interact with the data storage system on your behalf. However,
-you can also write to data storage directly by
+interact with the data recorder on your behalf. However,
+you can also write records directly by
 clicking the small button on the right side of
 the computer's case. This is the only way to install an
 operating system on a Grove computer that doesn't yet have
@@ -106,8 +106,8 @@ one.
 
 ### Starting up
 
-When a Grove system starts up, it looks for a data entry called
-`system/startup.js`. It expects this entry to contain the
+When a Grove system starts up, it looks for a record called
+`system/startup.js`. It expects this record to contain the
 definition of a function `main()`. If the `main()`
 function exists, the Grove
 will run it. If not, it will display an error message to

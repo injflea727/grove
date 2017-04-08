@@ -23,7 +23,7 @@ function Grove (files, printTrustedOutput) {
   // === State variables ==================================
 
   var on      = false
-  var data    = DataStorage(Immutable.Map(files))
+  var data    = DataRecorder(Immutable.Map(files))
   var main    = null
 
   // === Public interface declaration =====================
