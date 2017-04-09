@@ -1,5 +1,3 @@
-var Immutable = require('../src/immutable')
-
 describe('Grove', function() {
   var receiveOutput = jasmine.createSpy('receiveOutput')
   var handleDataChange = jasmine.createSpy('handleDataChange')

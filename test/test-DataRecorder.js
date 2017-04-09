@@ -25,11 +25,11 @@ describe('DataRecorder', function() {
   })
 
   it('JSONifies itself', function() {
-    var entries = Immutable.Map({
+    var records = {
       a: 'b',
       c: 'd'
-    })
-    var rec = DataRecorder(entries)
+    }
+    var rec = DataRecorder(records)
 
     expect(rec.toJSON()).toEqual('{"a":"b","c":"d"}')
   })
