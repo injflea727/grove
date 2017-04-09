@@ -2,7 +2,7 @@
 var keys = {}
 var text = ''
 function main(event, dataRecorder) {
-  var cmd = DataCommand.noop()
+  var toSave = {}
   if (event.type === 'startup') {
     text = dataRecorder.read('myfile')
     return 'Start typing! Text is saved when you press ENTER.'
@@ -14,7 +14,7 @@ function main(event, dataRecorder) {
       case 13:
         // enter
         text += '\n'
-        cmd = cmd.and(DataCommand.write('myfile', text))
+        toSave['myfile'] = text
         break
       case 8:
         // backspace
@@ -38,6 +38,6 @@ function main(event, dataRecorder) {
   return {
     screen: [eventOutput]
       .concat(text.split('\n')),
-    dataCommand: cmd
+    records: toSave
   }
 }
