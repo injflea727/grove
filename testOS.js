@@ -5,7 +5,8 @@ function main(event, dataRecorder) {
   var toSave = {}
   if (event.type === 'startup') {
     text = dataRecorder.read('myfile')
-    return 'Start typing! Text is saved when you press ENTER.'
+    return systemBar('Start typing! Text is saved when you press ENTER.')
+      .concat(cursor(text).split('\n'))
   }
 
   if (event.type === 'keyDown') {
@@ -36,8 +37,22 @@ function main(event, dataRecorder) {
   var eventOutput =
     '' + event.type + ' ' + Object.keys(keys).join(', ')
   return {
-    screen: [eventOutput]
-      .concat(text.split('\n')),
+    screen: systemBar(eventOutput)
+      .concat(cursor(text).split('\n')),
     records: toSave
   }
+}
+
+function systemBar(string) {
+  var style = {
+    fg: 'black',
+    bg: 'goldenrod',
+    b: 1
+  }
+
+  return [LineBuffer(string, style)]
+}
+
+function cursor(string) {
+  return string + '\u2592'
 }
