@@ -3,7 +3,8 @@
 
 var $ = document.querySelectorAll.bind(document)
 
-// DOM elements
+// --- DOM elements ---------------------------------------
+
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
 var $filesScript = $('#files')[0]
@@ -16,17 +17,18 @@ var $entryContentInput = $('#file-modal textarea')[0]
 var $dataEditorSaveButton = $('#file-modal .save')[0]
 var $title = $('head title')[0]
 
+// --- Initial state --------------------------------------
+
 var dataRecords = FILES
-
-function click(elem, callback) {
-  elem.addEventListener('click', callback)
-}
-
-function setTitleTo(title) {
-  $title.innerText = title
-}
-
 var lastSaveTimestamp = +(new Date())
+var groveWorker = GroveWorker(
+  dataRecords,
+  handleMessageFromWorker)
+
+setTitleTo(getComputerName(dataRecords))
+
+// --- Event handler setup --------------------------------
+
 click($diskSlot, function() {
   $filesScript.innerText
     = 'var FILES = ' + JSON.stringify(dataRecords)
@@ -68,25 +70,9 @@ click($powerSwitch, function() {
     redraw([])
   } else {
     // turn on
-    groveWorker = GroveWorker()
+    groveWorker = GroveWorker(dataRecords, handleMessageFromWorker)
   }
 })
-
-function redraw(text) {
-  var lines = $('#terminal p')
-  for (var i = 0; i < lines.length; i++) {
-    lines[i].innerHTML = text[i] || ''
-  }
-}
-
-function createFilename(computerName) {
-  var date = new Date()
-  return computerName + '-' + formatDateForFilename(date)
-}
-
-function shouldWarnAboutUnsavedChanges() {
-  return +(new Date()) - lastSaveTimestamp > 30 * 1000
-}
 
 window.addEventListener('beforeunload', function(e) {
   if (shouldWarnAboutUnsavedChanges()) {
@@ -107,6 +93,8 @@ window.addEventListener('keyup', function(e) {
   }
 })
 
+// --- Function definitions -------------------------------
+
 function handleMessageFromWorker(msg) {
   switch (msg.data.type) {
     case 'redraw':
@@ -119,10 +107,7 @@ function handleMessageFromWorker(msg) {
   }
 }
 
-var groveWorker = GroveWorker()
-setTitleTo(getComputerName(dataRecords))
-
-function GroveWorker() {
+function GroveWorker(dataRecords, messageCallback) {
   var scriptBlob = new Blob([
     'var FILES = ',
     JSON.stringify(dataRecords),
@@ -131,8 +116,32 @@ function GroveWorker() {
   ])
 
   var worker = new Worker(URL.createObjectURL(scriptBlob))
-  worker.addEventListener('message', handleMessageFromWorker)
+  worker.addEventListener('message', messageCallback)
   return worker
+}
+
+function click(elem, callback) {
+  elem.addEventListener('click', callback)
+}
+
+function setTitleTo(title) {
+  $title.innerText = title
+}
+
+function redraw(text) {
+  var lines = $('#terminal p')
+  for (var i = 0; i < lines.length; i++) {
+    lines[i].innerHTML = text[i] || ''
+  }
+}
+
+function createFilename(computerName) {
+  var date = new Date()
+  return computerName + '-' + formatDateForFilename(date)
+}
+
+function shouldWarnAboutUnsavedChanges() {
+  return +(new Date()) - lastSaveTimestamp > 30 * 1000
 }
 
 })();
