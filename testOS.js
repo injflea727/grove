@@ -1,14 +1,43 @@
 /* sample OS to test that the Grove is working */
 var keys = {}
+var text = ''
 function main(event, dataRecorder) {
+  var cmd = DataCommand.noop()
+  if (event.type === 'startup') {
+    text = dataRecorder.read('myfile')
+    return 'Start typing! Text is saved when you press ENTER.'
+  }
+
   if (event.type === 'keyDown') {
     keys[event.key] = true
+    switch (event.key) {
+      case 13:
+        // enter
+        text += '\n'
+        cmd = cmd.and(DataCommand.write('myfile', text))
+        break
+      case 8:
+        // backspace
+        text = text.slice(0, text.length - 1)
+        break
+      case 192:
+        // tilde
+        // test that we can recover from an infinite loop
+        while (true) {}
+      default:
+        text += String.fromCharCode(event.key)
+    }
   }
 
   if (event.type === 'keyUp') {
     delete keys[event.key]
   }
 
-  return dataRecorder.read('system/startup.js').split('\n')
-    .concat(Object.keys(keys))
+  var eventOutput =
+    '' + event.type + ' ' + Object.keys(keys).join(', ')
+  return {
+    screen: [eventOutput]
+      .concat(text.split('\n')),
+    dataCommand: cmd
+  }
 }

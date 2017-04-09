@@ -151,7 +151,7 @@ describe('Grove', function() {
         + 'var count = +data.read("count") || 0;'
         + 'return {'
         + '  screen: count,'
-        + '  dataCommand: DataCommand.write("count", "" + (count+1))'
+        + '  records: {"count": "" + (count+1)}'
         + '} }'
     }
 
@@ -170,7 +170,7 @@ describe('Grove', function() {
         + 'var count = +data.read("count") || 0;'
         + 'return {'
         + '  screen: count,'
-        + '  dataCommand: DataCommand.write("count", "" + (count+1))'
+        + '  records: {"count": "" + (count+1)}'
         + '} }'
     }
 

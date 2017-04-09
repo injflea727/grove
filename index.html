@@ -414,52 +414,6 @@ DataRecorder = function(entries, changeCallback) {
 
   return recorder
 }
-var DataCommand = {}
-
-DataCommand.noop = function() {
-  return NoopDataCommand()
-}
-
-DataCommand.write = function(name, value) {
-  return WriteDataCommand(name, value)
-}
-
-function WriteDataCommand(name, value) {
-  var self
-
-  return self = {
-    and: function(cmd) {
-      return CompositeDataCommand(self, cmd)
-    },
-    exec: function(dataRecorder) {
-      dataRecorder.write(name, value)
-    }
-  }
-}
-
-function NoopDataCommand() {
-  var self
-
-  return self = {
-    and: function(cmd) { return cmd },
-    exec: function() { return self }
-  }
-}
-
-function CompositeDataCommand(first, second) {
-  var self
-
-  return self = {
-    and: function(cmd) {
-      return CompositeDataCommand(self, cmd)
-    },
-    exec: function(dataRecorder) {
-      first.exec(dataRecorder)
-      second.exec(dataRecorder)
-      return self
-    }
-  }
-}
 function ReadOnly(readable) {
   return {
     read: function(prop) {
@@ -712,8 +666,8 @@ function Grove (
       output = '' + output
     }
 
-    if (output.dataCommand) {
-      output.dataCommand.exec(data)
+    if (output.records) {
+      updateDataRecorder(output.records)
     }
 
     if (hasOwnProperty.call(output, 'screen')) {
@@ -761,10 +715,15 @@ function Grove (
   }
 
   function notWhitelistedGlobal(varName) {
-    return ! (
-         varName === 'LineBuffer'
-      || varName === 'DataCommand'
-      )
+    return varName !== 'LineBuffer'
+  }
+
+  function updateDataRecorder(newRecords) {
+    for (var name in newRecords) {
+      if (Object.prototype.hasOwnProperty.call(newRecords, name)) {
+        data.write(name, newRecords[name])
+      }
+    }
   }
 }
 ;(function() {

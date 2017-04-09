@@ -103,8 +103,8 @@ function Grove (
       output = '' + output
     }
 
-    if (output.dataCommand) {
-      output.dataCommand.exec(data)
+    if (output.records) {
+      updateDataRecorder(output.records)
     }
 
     if (hasOwnProperty.call(output, 'screen')) {
@@ -152,9 +152,14 @@ function Grove (
   }
 
   function notWhitelistedGlobal(varName) {
-    return ! (
-         varName === 'LineBuffer'
-      || varName === 'DataCommand'
-      )
+    return varName !== 'LineBuffer'
+  }
+
+  function updateDataRecorder(newRecords) {
+    for (var name in newRecords) {
+      if (Object.prototype.hasOwnProperty.call(newRecords, name)) {
+        data.write(name, newRecords[name])
+      }
+    }
   }
 }
