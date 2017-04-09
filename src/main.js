@@ -33,7 +33,7 @@ click($diskSlot, function() {
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
-  saveAs(blob, createFilename(getComputerName()))
+  saveAs(blob, createFilename(getComputerName(dataRecords)))
   lastSaveTimestamp = +(new Date())
 })
 
@@ -88,10 +88,6 @@ function shouldWarnAboutUnsavedChanges() {
   return +(new Date()) - lastSaveTimestamp > 30 * 1000
 }
 
-function getComputerName() {
-  return dataRecords['system/name'] || 'grove'
-}
-
 window.addEventListener('beforeunload', function(e) {
   if (shouldWarnAboutUnsavedChanges()) {
     // This message isn't shown in Chrome but it might be in other browsers.
@@ -118,13 +114,13 @@ function handleMessageFromWorker(msg) {
       break
     case 'dataRecordChange':
       dataRecords[msg.data.name] = msg.data.content
-      setTitleTo(getComputerName())
+      setTitleTo(getComputerName(dataRecords))
       break
   }
 }
 
 var groveWorker = GroveWorker()
-setTitleTo(getComputerName())
+setTitleTo(getComputerName(dataRecords))
 
 function GroveWorker() {
   var scriptBlob = new Blob([

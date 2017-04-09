@@ -98,20 +98,6 @@ describe('Grove', function() {
     expect(lastOutput()[0]).toContain('foo')
   })
 
-  it('has a name, read from system/name', function() {
-    var files = {
-      'system/name': 'custom name'
-    }
-    var g = Grove(files, receiveOutput)
-    expect(g.getName()).toBe('custom name')
-  })
-
-  it('uses "grove" as the default name', function() {
-    var files = {}
-    var g = Grove(files, receiveOutput)
-    expect(g.getName()).toBe('grove')
-  })
-
   it('outputs the filesystem state as json', function() {
     var files = { foo: 'bar' }
     var g = Grove(files, receiveOutput)

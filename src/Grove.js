@@ -46,7 +46,6 @@ function Grove (
   // === Public interface declaration =====================
 
   return {
-    getName:       getName,
     editEntry:     editEntry,
     getDataAsJSON: getDataAsJSON,
     handleKeyDown: handleKeyDown,
@@ -54,10 +53,6 @@ function Grove (
   }
 
   // === Public function definitions ======================
-
-  function getName() {
-    return data.read('system/name') || 'grove'
-  }
 
   function editEntry(name, content) {
     data = data.write(name, content)
