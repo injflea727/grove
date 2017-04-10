@@ -41,6 +41,7 @@ click($diskSlot, function() {
 
 click($showDataEditorButton, function() {
   $modalOverlay.style.display = 'block';
+  $entryNameInput.focus()
 })
 
 click($hideDataEditorButton, function() {

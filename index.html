@@ -326,11 +326,11 @@ var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof na
           <button>x</button>
         </div>
         <div class="file-selector">
-          <input type="text">
-          <button class="save">Save</button>
+          <input type="text" tabindex="1">
+          <button class="save" tabindex="3">Save</button>
         </div>
 
-        <textarea></textarea>
+        <textarea tabindex="2"></textarea>
       </div>
     </div>
 
@@ -782,6 +782,7 @@ click($diskSlot, function() {
 
 click($showDataEditorButton, function() {
   $modalOverlay.style.display = 'block';
+  $entryNameInput.focus()
 })
 
 click($hideDataEditorButton, function() {
