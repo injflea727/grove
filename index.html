@@ -824,13 +824,13 @@ window.addEventListener('beforeunload', function(e) {
 })
 
 window.addEventListener('keydown', function(e) {
-  if (groveWorker) { // TODO refactor to null object pattern
+  if (groveCanReceiveKeyEvents()) {
     groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
   }
 })
 
 window.addEventListener('keyup', function(e) {
-  if (groveWorker) {
+  if (groveCanReceiveKeyEvents()) {
     groveWorker.postMessage({type: 'keyUp', event: {keyCode: e.keyCode}})
   }
 })
@@ -875,6 +875,14 @@ function redraw(text) {
   for (var i = 0; i < lines.length; i++) {
     lines[i].innerHTML = text[i] || ''
   }
+}
+
+function groveCanReceiveKeyEvents() {
+  return groveWorker
+    && $modalOverlay.style.display !== 'block'
+    // if the modal is shown, don't let the Grove handle
+    // key events since the user probably wants to type
+    // in the form fields.
 }
 
 function createFilename(computerName) {
