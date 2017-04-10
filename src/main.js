@@ -84,12 +84,14 @@ window.addEventListener('beforeunload', function(e) {
 
 window.addEventListener('keydown', function(e) {
   if (groveCanReceiveKeyEvents()) {
+    e.preventDefault()
     groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
   }
 })
 
 window.addEventListener('keyup', function(e) {
   if (groveCanReceiveKeyEvents()) {
+    e.preventDefault()
     groveWorker.postMessage({type: 'keyUp', event: {keyCode: e.keyCode}})
   }
 })
