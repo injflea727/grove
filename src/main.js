@@ -83,7 +83,7 @@ window.addEventListener('beforeunload', function(e) {
 })
 
 window.addEventListener('keydown', function(e) {
-  if (groveWorker) { // TODO refactor to null object pattern
+  if (groveWorker) {
     groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
   }
 })
