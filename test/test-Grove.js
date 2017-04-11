@@ -113,6 +113,41 @@ describe('Grove', function() {
     g.handleKeyDown({keyCode: 32})
 
     expect(lastOutput()[0]).toContain('keyDown: 32')
+
+    g.handleKeyDown({keyCode: 65})
+
+    expect(lastOutput()[0]).toContain('keyDown: 65')
+  })
+
+  it('does not register duplicate key presses with no intervening key release', function() {
+    // this is important because the browser will send repeated
+    // keydown events when a key is held.
+    var files = {
+      'system/startup.js':
+        'var count = 0; function main(evt) { return "" + (count++) }'
+    }
+    var g = Grove(files, receiveOutput)
+
+    g.handleKeyDown({keyCode: 32})
+    g.handleKeyDown({keyCode: 32})
+
+    expect(lastOutput()[0]).toContain('1')
+  })
+
+  it('does register a key press after the key is released', function() {
+    // this is important because the browser will send repeated
+    // keydown events when a key is held.
+    var files = {
+      'system/startup.js':
+        'var count = 0; function main(evt) { return "" + (count++) }'
+    }
+    var g = Grove(files, receiveOutput)
+
+    g.handleKeyDown({keyCode: 32})
+    g.handleKeyUp({keyCode: 32})
+    g.handleKeyDown({keyCode: 32})
+
+    expect(lastOutput()[0]).toContain('3')
   })
 
   it('passes the key code to main() when a key is released', function() {

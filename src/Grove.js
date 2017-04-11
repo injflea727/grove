@@ -30,6 +30,7 @@ function Grove (
 
   var data = DataRecorder(files, dataChangeCallback)
   var main = null
+  var keysHeld = {}
 
   // === Initialization ===================================
 
@@ -64,11 +65,14 @@ function Grove (
 
   function handleKeyDown(event) {
     var key = event.keyCode
+    if (keysHeld[key]) return
+    keysHeld[key] = true
     runMainAndPrintOutput({type: 'keyDown', key: key})
   }
 
   function handleKeyUp(event) {
     var key = event.keyCode
+    delete keysHeld[key]
     runMainAndPrintOutput({type: 'keyUp', key: key})
   }
 
