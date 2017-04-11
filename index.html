@@ -875,10 +875,15 @@ function setTitleTo(title) {
   $title.innerText = title
 }
 
+var previouslyDrawn = []
 function redraw(text) {
-  var lines = $('#terminal p')
-  for (var i = 0; i < lines.length; i++) {
-    lines[i].innerHTML = text[i] || ''
+  var lineElements = $('#terminal p')
+  for (var i = 0; i < lineElements.length; i++) {
+    if (text[i] !== previouslyDrawn[i]) {
+      lineElements[i].innerHTML = text[i] || ''
+      previouslyDrawn[i] = text[i]
+    }
+
   }
 }
 
