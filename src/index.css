@@ -25,7 +25,7 @@ body {
   display: none;
 }
 
-#file-modal {
+#data-record-modal {
   width: 540px;
   margin-left: auto;
   margin-right: auto;
@@ -36,21 +36,21 @@ body {
   box-shadow: 0 0 60px #000;
 }
 
-#file-modal button {
+#data-record-modal button {
   cursor: pointer;
 }
 
-.file-selector {
+.data-record-selector {
   margin-bottom: 12px;
 }
 
-.file-selector input {
+.data-record-selector input {
   width: 399px;
   height: 30px;
   font-size: 14px;
 }
 
-.file-selector button {
+.data-record-selector button {
   width: 96px;
   margin-left: 12px;
   height: 30px;
@@ -60,21 +60,21 @@ body {
   border: none;
 }
 
-#file-modal textarea {
+#data-record-modal textarea {
   width: 100%;
   height: 300px;
   font-family: DejaVuMono, Menlo, Consolas, monospace;
 }
 
-#file-modal .close-button {
+#data-record-modal .close-button {
   height: 30px;
 }
 
-#file-modal .close-button .title {
+#data-record-modal .close-button .title {
   float: left;
 }
 
-#file-modal .close-button button {
+#data-record-modal .close-button button {
   width: 20px;
   background-color: #f44;
   border: none;

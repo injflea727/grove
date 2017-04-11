@@ -32,7 +32,7 @@ body {
   display: none;
 }
 
-#file-modal {
+#data-record-modal {
   width: 540px;
   margin-left: auto;
   margin-right: auto;
@@ -43,21 +43,21 @@ body {
   box-shadow: 0 0 60px #000;
 }
 
-#file-modal button {
+#data-record-modal button {
   cursor: pointer;
 }
 
-.file-selector {
+.data-record-selector {
   margin-bottom: 12px;
 }
 
-.file-selector input {
+.data-record-selector input {
   width: 399px;
   height: 30px;
   font-size: 14px;
 }
 
-.file-selector button {
+.data-record-selector button {
   width: 96px;
   margin-left: 12px;
   height: 30px;
@@ -67,21 +67,21 @@ body {
   border: none;
 }
 
-#file-modal textarea {
+#data-record-modal textarea {
   width: 100%;
   height: 300px;
   font-family: DejaVuMono, Menlo, Consolas, monospace;
 }
 
-#file-modal .close-button {
+#data-record-modal .close-button {
   height: 30px;
 }
 
-#file-modal .close-button .title {
+#data-record-modal .close-button .title {
   float: left;
 }
 
-#file-modal .close-button button {
+#data-record-modal .close-button button {
   width: 20px;
   background-color: #f44;
   border: none;
@@ -318,14 +318,14 @@ var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof na
     </div>
 
     <div id="overlay">
-      <div id="file-modal">
+      <div id="data-record-modal">
         <div class="close-button">
           <div class="title">
             Data Recorder
           </div>
           <button>x</button>
         </div>
-        <div class="file-selector">
+        <div class="data-record-selector">
           <input type="text" tabindex="1">
           <button class="save" tabindex="3">Save</button>
         </div>
@@ -334,9 +334,9 @@ var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof na
       </div>
     </div>
 
-    <script id="files">
+    <script id="records">
 
-    var FILES = {}
+    var RECORDS = {}
 
     </script>
 
@@ -547,7 +547,7 @@ var hasOwnProperty = Object.prototype.hasOwnProperty
  * the browser environment (to make it easier to test).
  */
 function Grove (
-    files,
+    records,
     printTrustedOutput,
     dataChangeCallback) {
 
@@ -555,7 +555,7 @@ function Grove (
 
   // === State variables ==================================
 
-  var data = DataRecorder(files, dataChangeCallback)
+  var data = DataRecorder(records, dataChangeCallback)
   var main = null
   var keysHeld = {}
 
@@ -661,8 +661,7 @@ function Grove (
 
   function printStartupJsNotFoundError () {
     printTrustedOutput([
-      'Tried to read from system/startup.js, but there '
-        + 'is no such entry'
+      "Can't start up because system/startup.js is empty."
     ])
   }
 
@@ -692,7 +691,7 @@ function Grove (
 ;(function() {
 "use strict"
 
-var grove = Grove(FILES, redraw, notifyOfDataRecordChange)
+var grove = Grove(RECORDS, redraw, notifyOfDataRecordChange)
 
 self.addEventListener('message', function(message) {
   var msgdata = message.data
@@ -752,19 +751,19 @@ var $ = document.querySelectorAll.bind(document)
 
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
-var $filesScript = $('#files')[0]
+var $recordsScript = $('#records')[0]
 var $groveWorkerScript = $('#grove-worker')[0]
 var $modalOverlay = $('#overlay')[0]
-var $hideDataEditorButton = $('#file-modal .close-button button')[0]
+var $hideDataEditorButton = $('#data-record-modal .close-button button')[0]
 var $showDataEditorButton = $('#data-editor-button')[0]
-var $entryNameInput = $('#file-modal .file-selector input')[0]
-var $entryContentInput = $('#file-modal textarea')[0]
-var $dataEditorSaveButton = $('#file-modal .save')[0]
+var $entryNameInput = $('#data-record-modal .data-record-selector input')[0]
+var $entryContentInput = $('#data-record-modal textarea')[0]
+var $dataEditorSaveButton = $('#data-record-modal .save')[0]
 var $title = $('head title')[0]
 
 // --- Initial state --------------------------------------
 
-var dataRecords = FILES
+var dataRecords = RECORDS
 var lastSaveTimestamp = +(new Date())
 var groveWorker = GroveWorker(
   dataRecords,
@@ -775,8 +774,8 @@ setTitleTo(getComputerName(dataRecords))
 // --- Event handler setup --------------------------------
 
 click($diskSlot, function() {
-  $filesScript.innerText
-    = 'var FILES = ' + JSON.stringify(dataRecords)
+  $recordsScript.innerText
+    = 'var RECORDS = ' + JSON.stringify(dataRecords)
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
@@ -857,7 +856,7 @@ function handleMessageFromWorker(msg) {
 
 function GroveWorker(dataRecords, messageCallback) {
   var scriptBlob = new Blob([
-    'var FILES = ',
+    'var RECORDS = ',
     JSON.stringify(dataRecords),
     ';',
     $groveWorkerScript.innerText

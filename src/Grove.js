@@ -20,7 +20,7 @@ var hasOwnProperty = Object.prototype.hasOwnProperty
  * the browser environment (to make it easier to test).
  */
 function Grove (
-    files,
+    records,
     printTrustedOutput,
     dataChangeCallback) {
 
@@ -28,7 +28,7 @@ function Grove (
 
   // === State variables ==================================
 
-  var data = DataRecorder(files, dataChangeCallback)
+  var data = DataRecorder(records, dataChangeCallback)
   var main = null
   var keysHeld = {}
 
@@ -134,8 +134,7 @@ function Grove (
 
   function printStartupJsNotFoundError () {
     printTrustedOutput([
-      'Tried to read from system/startup.js, but there '
-        + 'is no such entry'
+      "Can't start up because system/startup.js is empty."
     ])
   }
 

@@ -1,7 +1,7 @@
 ;(function() {
 "use strict"
 
-var grove = Grove(FILES, redraw, notifyOfDataRecordChange)
+var grove = Grove(RECORDS, redraw, notifyOfDataRecordChange)
 
 self.addEventListener('message', function(message) {
   var msgdata = message.data

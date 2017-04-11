@@ -7,19 +7,19 @@ var $ = document.querySelectorAll.bind(document)
 
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
-var $filesScript = $('#files')[0]
+var $recordsScript = $('#records')[0]
 var $groveWorkerScript = $('#grove-worker')[0]
 var $modalOverlay = $('#overlay')[0]
-var $hideDataEditorButton = $('#file-modal .close-button button')[0]
+var $hideDataEditorButton = $('#data-record-modal .close-button button')[0]
 var $showDataEditorButton = $('#data-editor-button')[0]
-var $entryNameInput = $('#file-modal .file-selector input')[0]
-var $entryContentInput = $('#file-modal textarea')[0]
-var $dataEditorSaveButton = $('#file-modal .save')[0]
+var $entryNameInput = $('#data-record-modal .data-record-selector input')[0]
+var $entryContentInput = $('#data-record-modal textarea')[0]
+var $dataEditorSaveButton = $('#data-record-modal .save')[0]
 var $title = $('head title')[0]
 
 // --- Initial state --------------------------------------
 
-var dataRecords = FILES
+var dataRecords = RECORDS
 var lastSaveTimestamp = +(new Date())
 var groveWorker = GroveWorker(
   dataRecords,
@@ -30,8 +30,8 @@ setTitleTo(getComputerName(dataRecords))
 // --- Event handler setup --------------------------------
 
 click($diskSlot, function() {
-  $filesScript.innerText
-    = 'var FILES = ' + JSON.stringify(dataRecords)
+  $recordsScript.innerText
+    = 'var RECORDS = ' + JSON.stringify(dataRecords)
 
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
@@ -112,7 +112,7 @@ function handleMessageFromWorker(msg) {
 
 function GroveWorker(dataRecords, messageCallback) {
   var scriptBlob = new Blob([
-    'var FILES = ',
+    'var RECORDS = ',
     JSON.stringify(dataRecords),
     ';',
     $groveWorkerScript.innerText
