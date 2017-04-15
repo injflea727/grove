@@ -1,6 +1,7 @@
 /* sample OS to test that the Grove is working */
 var keys = {}
 var text = ''
+var cursorBlink = true
 function main(event, dataRecorder) {
   var toSave = {}
   if (event.type === 'startup') {
@@ -34,6 +35,10 @@ function main(event, dataRecorder) {
     delete keys[event.key]
   }
 
+  if (event.type === 'clock') {
+    cursorBlink = !cursorBlink
+  }
+
   var eventOutput =
     '' + event.type + ' ' + Object.keys(keys).join(', ')
   return {
@@ -54,5 +59,6 @@ function systemBar(string) {
 }
 
 function cursor(string) {
-  return string + '\u2592'
+  if (cursorBlink) return string + '\u2592'
+  return string
 }

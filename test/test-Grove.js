@@ -1,10 +1,20 @@
 describe('Grove', function() {
-  var receiveOutput = jasmine.createSpy('receiveOutput')
-  var handleDataChange = jasmine.createSpy('handleDataChange')
+  var receiveOutput
+  var handleDataChange
 
   function lastOutput() {
     return receiveOutput.calls.mostRecent().args[0]
   }
+
+  beforeEach(function() {
+    receiveOutput = jasmine.createSpy('receiveOutput')
+    handleDataChange = jasmine.createSpy('handleDataChange')
+    jasmine.clock().install()
+  })
+
+  afterEach(function() {
+    jasmine.clock().uninstall()
+  })
 
   it('renders an error when there are no records', function() {
     var g = Grove({}, receiveOutput)
@@ -197,5 +207,21 @@ describe('Grove', function() {
     expect(handleDataChange).toHaveBeenCalledWith('count', '1')
     g.handleKeyDown({keyCode: 65})
     expect(handleDataChange).toHaveBeenCalledWith('count', '2')
+  })
+
+  it('calls main() for every frame of animation', function() {
+    var records = {
+      'system/startup.js':
+        'var calls = 0;'
+        + 'function main(event) { '
+        + 'return "" + (calls++)'
+        + '}'
+    }
+
+    var g = Grove(records, receiveOutput)
+    g.handleClock()
+    expect(lastOutput()[0]).toContain(1)
+    g.handleClock()
+    expect(lastOutput()[0]).toContain(2)
   })
 })

@@ -44,13 +44,16 @@ function Grove (
     printStartupJsNotFoundError()
   }
 
+  getGlobalObject().setTimeout(handleClock, 0)
+
   // === Public interface declaration =====================
 
   return {
     editEntry:     editEntry,
     getDataAsJSON: getDataAsJSON,
     handleKeyDown: handleKeyDown,
-    handleKeyUp:   handleKeyUp
+    handleKeyUp:   handleKeyUp,
+    handleClock:   handleClock
   }
 
   // === Public function definitions ======================
@@ -78,13 +81,24 @@ function Grove (
 
   // === Private functions ================================
 
+  function handleClock() {
+    runMainAndPrintOutput({
+      type: 'clock',
+      time: +new Date()
+    })
+    getGlobalObject()
+      .setTimeout(handleClock, timeUntilNextFrame(+new Date(), 20))
+  }
+
   function runnableStartupScript (src) {
-    return '(function(){'
+    var scriptText = '(function(){'
       + 'var ' + Object.keys(getGlobalObject())
         .filter(notWhitelistedGlobal).join(',')
       + ';' + src
       + 'return main'
       + '})()'
+
+    return scriptText
   }
 
   function bootFromStartupScript () {
