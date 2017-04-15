@@ -18,19 +18,23 @@ describe('Grove', function() {
 
   it('renders an error when there are no records', function() {
     var g = Grove({}, receiveOutput)
-    expect(receiveOutput).toHaveBeenCalledWith(["Can't start up because system/startup.js is empty."])
+    expect(receiveOutput).toHaveBeenCalledWith([
+      "Can't start up because the \"startup\" record does not define a"
+      , "main() function."
+    ])
   })
 
   it('does not react to keypresses when booting is not successful', function() {
     var g = Grove({}, receiveOutput)
     g.handleKeyDown({keyCode: 32})
     expect(receiveOutput.calls.mostRecent().args[0])
-      .toEqual(["Can't start up because system/startup.js is empty."])
+      .toEqual(["Can't start up because the \"startup\" record does not define a",
+      "main() function."])
   })
 
   it('renders an error when the startup record has a syntax error', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function ()'
     }
     var g = Grove(records, receiveOutput)
@@ -40,7 +44,7 @@ describe('Grove', function() {
 
   it('renders the output of main() when the startup record is valid', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return "hello" }'
     }
     var g = Grove(records, receiveOutput)
@@ -49,7 +53,7 @@ describe('Grove', function() {
 
   it('does not allow the main() function to access Grove-defined functions', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return Grove().toString() }'
     }
     var g = Grove(records, receiveOutput)
@@ -59,7 +63,7 @@ describe('Grove', function() {
 
   it('does not allow the main() function to access global functions', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return setTimeout().toString() }'
     }
     var g = Grove(records, receiveOutput)
@@ -69,7 +73,7 @@ describe('Grove', function() {
 
   it('escapes HTML in data output from main()', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return "<script>hacked&" }'
     }
     var g = Grove(records, receiveOutput)
@@ -78,7 +82,7 @@ describe('Grove', function() {
 
   it('allows main() to format text with LineBuffer', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { '
         + 'return LineBuffer().paste("hello", 0, {b: 1})'
         + '}'
@@ -89,7 +93,7 @@ describe('Grove', function() {
 
   it('allows main() to return output as an array', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return ["line 1", "line 2"] }'
     }
     var g = Grove(records, receiveOutput)
@@ -99,7 +103,7 @@ describe('Grove', function() {
 
   it('allows main() to return output as an object with a "screen" property', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main() { return {screen: "foo"} }'
     }
     var g = Grove(records, receiveOutput)
@@ -114,7 +118,7 @@ describe('Grove', function() {
 
   it('passes the key code to main() when a key is pressed', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main(evt) { return evt.type + ": " + evt.key }'
     }
     var g = Grove(records, receiveOutput)
@@ -133,7 +137,7 @@ describe('Grove', function() {
     // this is important because the browser will send repeated
     // keydown events when a key is held.
     var records = {
-      'system/startup.js':
+      'startup':
         'var count = 0; function main(evt) { return "" + (count++) }'
     }
     var g = Grove(records, receiveOutput)
@@ -148,7 +152,7 @@ describe('Grove', function() {
     // this is important because the browser will send repeated
     // keydown events when a key is held.
     var records = {
-      'system/startup.js':
+      'startup':
         'var count = 0; function main(evt) { return "" + (count++) }'
     }
     var g = Grove(records, receiveOutput)
@@ -162,7 +166,7 @@ describe('Grove', function() {
 
   it('passes the key code to main() when a key is released', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main(evt) { return evt.type + ": " + evt.key }'
     }
     var g = Grove(records, receiveOutput)
@@ -175,7 +179,7 @@ describe('Grove', function() {
 
   it('allows main() to read and write data records', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main(event, data) { '
         + 'var count = +data.read("count") || 0;'
         + 'return {'
@@ -194,7 +198,7 @@ describe('Grove', function() {
 
   it('notifies listeners of data record changes', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'function main(event, data) { '
         + 'var count = +data.read("count") || 0;'
         + 'return {'
@@ -211,7 +215,7 @@ describe('Grove', function() {
 
   it('calls main() for every frame of animation', function() {
     var records = {
-      'system/startup.js':
+      'startup':
         'var calls = 0;'
         + 'function main(event) { '
         + 'return "" + (calls++)'

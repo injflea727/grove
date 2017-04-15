@@ -148,12 +148,13 @@ function Grove (
 
   function printStartupJsNotFoundError () {
     printTrustedOutput([
-      "Can't start up because system/startup.js is empty."
+      "Can't start up because the \"startup\" record does not define a",
+      "main() function."
     ])
   }
 
   function getStartupJs() {
-    return data.read('system/startup.js')
+    return data.read('startup')
   }
 
   function getGlobalObject () {

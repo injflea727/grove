@@ -90,7 +90,7 @@ web browser.
 ### The Data Recorder
 
 The **Data Recorder** holds *records*, which may be documents,
-programs, or any other data. An record has a *name*, which must be unique among
+programs, or any other data. A record has a *name*, which must be unique among
 all records in the system. It also has *content*.
 
 Data written to the recorder will persist across
@@ -107,13 +107,13 @@ one.
 ### Starting up
 
 When a Grove system starts up, it looks for a record called
-`system/startup.js`. It expects this record to contain the
+`startup`. It expects this record to contain the
 definition of a function `main()`. If the `main()`
 function exists, the Grove
 will run it. If not, it will display an error message to
 explain what went wrong.
 
-Here is an example `system/startup.js`:
+Here is an example `startup` record:
 
 ```javascript
 function main() {
@@ -160,6 +160,6 @@ to print its own source code.
 
 ```javascript
 function main(event, data) {
-  return data.read('system/startup.js').split('\n')
+  return data.read('startup').split('\n')
 }
 ```

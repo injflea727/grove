@@ -26,6 +26,10 @@ function main(event, dataRecorder) {
         // tilde
         // test that we can recover from an infinite loop
         while (true) {}
+      case 27:
+        // escape
+        // test that errors are printed
+        throw "You pressed escape."
       default:
         text += String.fromCharCode(event.key)
     }
