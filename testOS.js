@@ -1,13 +1,13 @@
 /* sample OS to test that the Grove is working */
 var keys = {}
 var text = ''
-var cursorBlink = true
+var cursorBlink = 0
+var eventOutput = 'Start typing! Text is saved when you press ENTER.'
+
 function main(event, dataRecorder) {
   var toSave = {}
   if (event.type === 'startup') {
     text = dataRecorder.read('myfile')
-    return systemBar('Start typing! Text is saved when you press ENTER.')
-      .concat(cursor(text).split('\n'))
   }
 
   if (event.type === 'keyDown') {
@@ -29,18 +29,20 @@ function main(event, dataRecorder) {
       default:
         text += String.fromCharCode(event.key)
     }
+
+    updateEventOutput(event)
   }
 
   if (event.type === 'keyUp') {
     delete keys[event.key]
+
+    updateEventOutput(event)
   }
 
   if (event.type === 'clock') {
-    cursorBlink = !cursorBlink
+    cursorBlink = (cursorBlink + 1) % 20
   }
 
-  var eventOutput =
-    '' + event.type + ' ' + Object.keys(keys).join(', ')
   return {
     screen: systemBar(eventOutput)
       .concat(cursor(text).split('\n')),
@@ -59,6 +61,11 @@ function systemBar(string) {
 }
 
 function cursor(string) {
-  if (cursorBlink) return string + '\u2592'
+  if (cursorBlink >= 10) return string + '\u2592'
   return string
+}
+
+function updateEventOutput(event) {
+  eventOutput =
+    '' + event.type + ' ' + Object.keys(keys).join(', ')
 }
