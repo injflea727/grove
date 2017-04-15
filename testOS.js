@@ -3,6 +3,7 @@ var keys = {}
 var text = ''
 var cursorBlink = 0
 var eventOutput = 'Start typing! Text is saved when you press ENTER.'
+var error
 
 function main(event, dataRecorder) {
   var toSave = {}
@@ -29,7 +30,7 @@ function main(event, dataRecorder) {
       case 27:
         // escape
         // test that errors are printed
-        throw "You pressed escape."
+        error = error ? null : "You pressed escape. Press it again to recover."
       default:
         text += String.fromCharCode(event.key)
     }
@@ -45,6 +46,10 @@ function main(event, dataRecorder) {
 
   if (event.type === 'clock') {
     cursorBlink = (cursorBlink + 1) % 20
+  }
+
+  if (error) {
+    throw error
   }
 
   return {

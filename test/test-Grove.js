@@ -57,8 +57,8 @@ describe('Grove', function() {
         'function main() { return Grove().toString() }'
     }
     var g = Grove(records, receiveOutput)
-    expect(lastOutput()).toContain('An error occurred while starting up:')
-    expect(lastOutput()).toContain('TypeError: Grove is not a function')
+    expect(lastOutput()[0]).toContain('The system encountered an error:')
+    expect(lastOutput()[1]).toContain('TypeError: Grove is not a function')
   })
 
   it('does not allow the main() function to access global functions', function() {
@@ -67,8 +67,8 @@ describe('Grove', function() {
         'function main() { return setTimeout().toString() }'
     }
     var g = Grove(records, receiveOutput)
-    expect(lastOutput()).toContain('An error occurred while starting up:')
-    expect(lastOutput()).toContain('TypeError: setTimeout is not a function')
+    expect(lastOutput()[0]).toContain('The system encountered an error:')
+    expect(lastOutput()[1]).toContain('TypeError: setTimeout is not a function')
   })
 
   it('escapes HTML in data output from main()', function() {
@@ -175,6 +175,20 @@ describe('Grove', function() {
     g.handleKeyUp({keyCode: 32})
 
     expect(lastOutput()[0]).toContain('keyUp: 32')
+  })
+
+  it('renders error messages thrown by events', function() {
+    var records = {
+      'startup':
+        'function main(evt) { if (evt.type === "keyDown") throw "kablooie"; return "ok" }'
+    }
+    var g = Grove(records, receiveOutput)
+
+    expect(function() { g.handleKeyDown({keyCode: 32}) })
+      .not.toThrow()
+
+    expect(lastOutput()[0]).toContain('The system encountered an error:')
+    expect(lastOutput()[1]).toContain('kablooie')
   })
 
   it('allows main() to read and write data records', function() {

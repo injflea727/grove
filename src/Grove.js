@@ -110,7 +110,19 @@ function Grove (
   function runMainAndPrintOutput(event) {
     if (!main) return
 
-    var output = main(event, ReadOnly(data))
+    var output
+    try {
+      output = main(event, ReadOnly(data))
+    } catch(e) {
+      var errorColors = {fg: 'black', bg: 'red', b: 1}
+      output = [
+        LineBuffer('The system encountered an error:', errorColors),
+        LineBuffer(e.toString(), errorColors),
+        LineBuffer('', errorColors),
+        LineBuffer('Please take a screenshot and report this problem to', errorColors),
+        LineBuffer('the.wizard.ben@gmail.com', errorColors)
+      ]
+    }
 
     if (output === undefined) {
       output = '' + output
