@@ -22,10 +22,7 @@ function LineBuffer(_text, _style) {
 
   // --- Initialization ------------------------------------
 
-  text         = _64_SPACES; paste(_text)
-  isBold       = _style && _style.bold
-  isItalic     = _style && _style.italic
-  isUnderlined = _style && _style.underlined
+  text = _64_SPACES; paste(_text)
 
   // --- Public interface declaration ----------------------
 
