@@ -256,4 +256,15 @@ describe('Grove', function() {
     g.handleClock()
     expect(lastOutput()[0]).toContain(2)
   })
+
+  it('does not re-render if main() returns null', function() {
+    var records = {
+      'startup': 'var c=0; function main() { if(!c++) return "hello"; return null }'
+    }
+
+    var g = Grove(records, receiveOutput)
+    expect(lastOutput()[0]).toContain('hello')
+    g.handleClock()
+    expect(lastOutput()[0]).toContain('hello')
+  })
 })

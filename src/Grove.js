@@ -130,6 +130,14 @@ function Grove (
       ]
     }
 
+    /* The OS may return null from main() if no re-render
+     * needs to be performed. This can be used as a performance
+     * optimization since the OS can avoid recomputing the
+     * screen buffer. */
+    if (output === null) {
+      return
+    }
+
     if (output === undefined) {
       output = '' + output
     }
