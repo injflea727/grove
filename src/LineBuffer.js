@@ -35,16 +35,15 @@ function LineBuffer(_text, _style) {
   // --- Public method definitions -------------------------
 
   function toHTML() {
-    var escaped = htmlEscape(makeScreenWidth(text))
     var perCharClasses = perCharStyle.map(function(s) {
       return s.toHTMLClasses()
     })
 
     var classEdges = edges(perCharClasses)
-    segments = splitAtIndices(classEdges, escaped)
+    segments = splitAtIndices(classEdges, makeScreenWidth(text))
 
     var pos = 0
-    return segments.map(function(seg) {
+    return segments.map(htmlEscape).map(function(seg) {
       var cls = perCharClasses[pos]
       pos += seg.length
 
