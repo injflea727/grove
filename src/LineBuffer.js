@@ -43,15 +43,17 @@ function LineBuffer(_text, _style) {
     segments = splitAtIndices(classEdges, makeScreenWidth(text))
 
     var pos = 0
-    return segments.map(htmlEscape).map(function(seg) {
+    return segments.map(function(seg) {
+      var escaped = htmlEscape(seg)
+
       var cls = perCharClasses[pos]
       pos += seg.length
 
       if (!cls) {
-        return seg
+        return escaped
       } else {
         return '<span class="' + cls + '">'
-          + seg
+          + escaped
           + '</span>'
       }
     }).join('')

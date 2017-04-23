@@ -197,6 +197,20 @@ describe('LineBuffer', function() {
     expect(actual).toBe(expected)
   })
 
+  it('formats characters after escaped entities correctly', function() {
+    var bold = {b: true}
+    var expected
+      = 'a&amp;<span class="bold">b</span>'
+      + '                                '
+      + '                             '
+
+    var actual = LineBuffer('a&b')
+      .paste('b', 2, bold)
+      .toHTML()
+
+    expect(actual).toBe(expected)
+  })
+
   it('performance benchmark', function() {
     var t0 = +new Date()
     Array(32000).map(function() {
