@@ -30,7 +30,7 @@ function main(event, dataRecorder) {
       case 27:
         // escape
         // test that errors are printed
-        error = error ? null : "You pressed escape. Press it again to recover."
+        error = error ? null : "You pressed escape. Reboot to recover."
       default:
         text += String.fromCharCode(event.key)
     }

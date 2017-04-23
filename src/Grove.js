@@ -31,6 +31,7 @@ function Grove (
   var data = DataRecorder(records, dataChangeCallback)
   var main = null
   var keysHeld = {}
+  var permanentErrorOutput = null
 
   // === Initialization ===================================
 
@@ -110,12 +111,17 @@ function Grove (
   function runMainAndPrintOutput(event) {
     if (!main) return
 
+    if (permanentErrorOutput) {
+      printLineBuffers(permanentErrorOutput)
+      return
+    }
+
     var output
     try {
       output = main(event, ReadOnly(data))
     } catch(e) {
       var errorColors = {fg: 'black', bg: 'red', b: 1}
-      output = [
+      output = permanentErrorOutput = [
         LineBuffer('The system encountered an error:', errorColors),
         LineBuffer(e.toString(), errorColors),
         LineBuffer('', errorColors),
@@ -146,9 +152,7 @@ function Grove (
       }
     }
 
-    printTrustedOutput(output.map(function(line) {
-      return line.toHTML()
-    }))
+    printLineBuffers(output)
   }
 
   function printErrorFromStartup (e) {
@@ -163,6 +167,12 @@ function Grove (
       "Can't start up because the \"startup\" record does not define a",
       "main() function."
     ])
+  }
+
+  function printLineBuffers(lineBuffers) {
+    printTrustedOutput(lineBuffers.map(function(buffer) {
+      return buffer.toHTML()
+    }))
   }
 
   function getStartupJs() {

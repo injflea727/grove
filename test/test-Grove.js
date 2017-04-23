@@ -191,6 +191,20 @@ describe('Grove', function() {
     expect(lastOutput()[1]).toContain('kablooie')
   })
 
+  it('does not respond to events after throwing an error', function() {
+    // this ensures that the user is able to see the error
+    // and take a screenshot.
+    var records = {
+      'startup':
+        'function main(evt) { if (evt.type === "keyDown") throw "kablooie"; return "ok" }'
+    }
+    var g = Grove(records, receiveOutput)
+    g.handleKeyDown({keyCode: 32})
+    g.handleKeyUp({keyCode: 32})
+
+    expect(lastOutput()[1]).toContain('kablooie')
+  })
+
   it('allows main() to read and write data records', function() {
     var records = {
       'startup':
