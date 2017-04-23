@@ -162,18 +162,13 @@ body {
   height: 16.8px;
 }
 
-#controls {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
 #power-switch, #slot, #data-editor-button {
   cursor: pointer;
   position: absolute;
 }
 
 #power-switch {
-  bottom: 30px;
+  bottom: 40px;
   left: 36px;
   color: #383838;
   text-shadow: 0 1px 0 #bba;
@@ -192,7 +187,7 @@ body {
 
 #slot {
   left: 100px;
-  bottom: 42px;
+  bottom: 52px;
   width: 320px;
   background-color: #383838;
   box-shadow: inset 0 2px 8px #000;
@@ -213,7 +208,7 @@ body {
   border-right: 1px solid #776;
   box-shadow: 0 0 2px #887;
   right: 36px;
-  bottom: 42px;
+  bottom: 52px;
 }
 
 .bold {
