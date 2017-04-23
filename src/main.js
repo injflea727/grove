@@ -157,7 +157,15 @@ function createFilename(computerName) {
 }
 
 function shouldWarnAboutUnsavedChanges() {
+  return isNavigationWarningEnabled() && userHasntSavedInAWhile()
+}
+
+function userHasntSavedInAWhile() {
   return +(new Date()) - lastSaveTimestamp > 30 * 1000
+}
+
+function isNavigationWarningEnabled() {
+  return !dataRecords['doNotWarnAboutUnsavedChanges']
 }
 
 })();
