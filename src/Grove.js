@@ -171,9 +171,23 @@ function Grove (
   }
 
   function printStartupJsNotFoundError () {
-    printTrustedOutput([
-      "Can't start up because the \"startup\" record does not define a",
-      "main() function."
+    printLineBuffers([
+      LineBuffer("Grove " + VERSION, {u: 1}),
+      LineBuffer(""),
+      LineBuffer("Welcome! This Grove has no operating system installed yet."),
+      LineBuffer("To get up and running quickly, please download a Grove snapshot"),
+      LineBuffer("that includes an operating system. Snapshots are available at"),
+      LineBuffer(""),
+      LineBuffer("    https://github.com/druidic/moss/releases", {fg: 'white'}),
+      LineBuffer(""),
+      LineBuffer("If you want to install or create a custom operating system,"),
+      LineBuffer("please read the guide available at"),
+      LineBuffer(""),
+      LineBuffer("    https://druidic.github.io/grove/guide", {fg: 'white'}),
+      LineBuffer(""),
+      LineBuffer("If you run into problems, feel free to contact support:"),
+      LineBuffer(""),
+      LineBuffer("    the.wizard.ben@gmail.com", {fg: 'white'})
     ])
   }
 

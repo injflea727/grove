@@ -16,20 +16,20 @@ describe('Grove', function() {
     jasmine.clock().uninstall()
   })
 
-  it('renders an error when there are no records', function() {
+  it('renders help text when there are no records', function() {
     var g = Grove({}, receiveOutput)
-    expect(receiveOutput).toHaveBeenCalledWith([
-      "Can't start up because the \"startup\" record does not define a"
-      , "main() function."
-    ])
+    expect(receiveOutput.calls.mostRecent().args[0][0])
+      .toContain("Grove")
+
+    expect(receiveOutput.calls.mostRecent().args[0][2])
+      .toContain("no operating system installed yet")
   })
 
   it('does not react to keypresses when booting is not successful', function() {
     var g = Grove({}, receiveOutput)
     g.handleKeyDown({keyCode: 32})
-    expect(receiveOutput.calls.mostRecent().args[0])
-      .toEqual(["Can't start up because the \"startup\" record does not define a",
-      "main() function."])
+    expect(receiveOutput.calls.mostRecent().args[0][0])
+      .toContain('Grove')
   })
 
   it('renders an error when the startup record has a syntax error', function() {
