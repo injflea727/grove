@@ -238,6 +238,8 @@ body {
 .fg-dimgray { color: dimgray; }
 .fg-goldenrod { color: goldenrod; }
 .fg-saddlebrown { color: saddlebrown; }
+.fg-peach { color: #ffd0a0; }
+.fg-phosphorgreen { color: #00d840; }
 
 .bg-cyan { background-color: cyan; }
 .bg-magenta { background-color: magenta; }
@@ -247,9 +249,12 @@ body {
 .bg-green { background-color: green; }
 .bg-blue { background-color: blue; }
 .bg-orange { background-color: orange; }
+.bg-purple { background-color: purple; }
 .bg-violet { background-color: violet; }
 .bg-white { background-color: white; }
 .bg-silver { background-color: silver; }
 .bg-dimgray { background-color: dimgray; }
 .bg-goldenrod { background-color: goldenrod; }
 .bg-saddlebrown { background-color: saddlebrown; }
+.bg-peach { background-color: #ffd0a0; }
+.bg-phosphorgreen { background-color: #00d840; }
