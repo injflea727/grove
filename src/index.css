@@ -150,7 +150,9 @@ body {
   width: 532px;
 
   font-family: DejaVuMono, Menlo, Consolas, monospace;
-  font-size: 13.8px;
+  font-size: 15px; /* font-size should be an integer */
+                   /* because Chromebook rounds it. */
+  letter-spacing: -0.75px;
   white-space: pre;
   overflow: hidden;
 }
