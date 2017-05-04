@@ -1,5 +1,7 @@
 #!/usr/bin/env bash -e
 
+which jasmine || npm install --global jasmine
+
 mkdir -p .build-tmp
 
 cat $(\
