@@ -13,4 +13,4 @@ cat $(\
 
 jasmine .build-tmp/test.js
 
-./resolve_includes.rb < src/index.template.html > index.html
+./resolve_includes.rb < src/grove.html.template > grove.html
