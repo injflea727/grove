@@ -30,7 +30,7 @@ setTitleTo(getComputerName(dataRecords))
 // --- Event handler setup --------------------------------
 
 click($diskSlot, function() {
-  $recordsScript.innerText
+  $recordsScript.textContent
     = 'var RECORDS = ' + JSON.stringify(dataRecords)
 
   var pageData = document.documentElement.outerHTML
@@ -115,7 +115,7 @@ function GroveWorker(dataRecords, messageCallback) {
     'var RECORDS = ',
     JSON.stringify(dataRecords),
     ';',
-    $groveWorkerScript.innerText
+    $groveWorkerScript.textContent
   ])
 
   var worker = new Worker(URL.createObjectURL(scriptBlob))
@@ -128,7 +128,7 @@ function click(elem, callback) {
 }
 
 function setTitleTo(title) {
-  $title.innerText = title
+  $title.textContent = title
 }
 
 var previouslyDrawn = []
@@ -139,7 +139,6 @@ function redraw(text) {
       lineElements[i].innerHTML = text[i] || ''
       previouslyDrawn[i] = text[i]
     }
-
   }
 }
 
