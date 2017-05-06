@@ -45,7 +45,7 @@ function Grove (
     printStartupJsNotFoundError()
   }
 
-  getGlobalObject().setTimeout(handleClock, 0)
+  getGlobalObject().setInterval(handleClock, 50)
 
   // === Public interface declaration =====================
 
@@ -87,8 +87,6 @@ function Grove (
       type: 'clock',
       time: +new Date()
     })
-    getGlobalObject()
-      .setTimeout(handleClock, timeUntilNextFrame(+new Date(), 20))
   }
 
   function runnableStartupScript (src) {
