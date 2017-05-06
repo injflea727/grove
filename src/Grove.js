@@ -93,8 +93,7 @@ function Grove (
 
   function runnableStartupScript (src) {
     var scriptText = '(function(){'
-      + 'var ' + Object.keys(getGlobalObject())
-        .filter(notWhitelistedGlobal).join(',')
+      + 'var ' + Object.keys(getGlobalObject()).join(',')
       + ';' + src
       + 'return main'
       + '})()'
@@ -112,7 +111,7 @@ function Grove (
     if (!main) return
 
     if (permanentErrorOutput) {
-      printLineBuffers(permanentErrorOutput)
+      printTrustedOutput(permanentErrorOutput)
       return
     }
 
@@ -122,11 +121,11 @@ function Grove (
     } catch(e) {
       var errorColors = {fg: 'black', bg: 'red', b: 1}
       output = permanentErrorOutput = [
-        LineBuffer('The system encountered an error:', errorColors),
-        LineBuffer(e.toString(), errorColors),
-        LineBuffer('', errorColors),
-        LineBuffer('Please take a screenshot and report this problem to', errorColors),
-        LineBuffer('the.wizard.ben@gmail.com', errorColors)
+        'The system encountered an error:',
+        e.toString(),
+        '',
+        'Please take a screenshot and report this problem to',
+        'the.wizard.ben@gmail.com'
       ]
     }
 
@@ -154,41 +153,35 @@ function Grove (
       output = [output]
     }
 
-    for (var i = 0; i < output.length; i++) {
-      if (output[i].type !== LineBuffer.type) {
-        output[i] = LineBuffer(output[i])
-      }
-    }
-
-    printLineBuffers(output)
+    printLineBuffers(output.map(LineBuffer))
   }
 
   function printErrorFromStartup (e) {
-    printTrustedOutput([
-      'An error occurred while starting up:',
-      htmlEscape(e.toString())
+    printLineBuffers([
+      LineBuffer('An error occurred while starting up:'),
+      LineBuffer(e.toString())
     ])
   }
 
   function printStartupJsNotFoundError () {
-    printLineBuffers([
-      LineBuffer("Grove " + VERSION, {u: 1}),
-      LineBuffer(""),
-      LineBuffer("Welcome! This Grove has no operating system installed yet."),
+    printTrustedOutput([
+      "Grove " + VERSION,
+      "",
+      "Welcome! This Grove has no operating system installed yet.",
       // TODO: make Moss a real thing
-      // LineBuffer("To get up and running quickly, please download a Grove snapshot"),
-      // LineBuffer("that includes an operating system. Snapshots are available at"),
-      // LineBuffer(""),
-      // LineBuffer("    https://github.com/druidic/moss/releases", {fg: 'white'}),
-      // LineBuffer(""),
-      LineBuffer("If you want to install or create a custom operating system,"),
-      LineBuffer("please read the guide available at"),
-      LineBuffer(""),
-      LineBuffer("    https://druidic.github.io/grove/guide", {fg: 'white'}),
-      LineBuffer(""),
-      LineBuffer("If you get stuck, feel free to contact support:"),
-      LineBuffer(""),
-      LineBuffer("    the.wizard.ben@gmail.com", {fg: 'white'})
+      // "To get up and running quickly, please download a Grove snapshot",
+      // "that includes an operating system. Snapshots are available at",
+      // "",
+      // "    https://github.com/druidic/moss/releases", {fg: 'white'},
+      // "",
+      "If you want to install or create a custom operating system,",
+      "please read the guide available at",
+      "",
+      "    https://druidic.github.io/grove/guide",
+      "",
+      "If you get stuck, feel free to contact support:",
+      "",
+      "    the.wizard.ben@gmail.com"
     ])
   }
 
@@ -207,10 +200,6 @@ function Grove (
       return self
     }
     return global
-  }
-
-  function notWhitelistedGlobal(varName) {
-    return varName !== 'LineBuffer'
   }
 
   function updateDataRecorder(newRecords) {

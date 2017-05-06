@@ -53,20 +53,10 @@ function main(event, dataRecorder) {
   }
 
   return {
-    screen: systemBar(eventOutput)
+    screen: [eventOutput]
       .concat(cursor(text).split('\n')),
     records: toSave
   }
-}
-
-function systemBar(string) {
-  var style = {
-    fg: 'black',
-    bg: 'goldenrod',
-    b: 1
-  }
-
-  return [LineBuffer(string, style)]
 }
 
 function cursor(string) {

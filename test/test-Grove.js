@@ -38,8 +38,8 @@ describe('Grove', function() {
         'function ()'
     }
     var g = Grove(records, receiveOutput)
-    expect(lastOutput()).toContain('An error occurred while starting up:')
-    expect(lastOutput()).toContain('SyntaxError: Unexpected token (')
+    expect(lastOutput()[0]).toContain('An error occurred while starting up:')
+    expect(lastOutput()[1]).toContain('SyntaxError: Unexpected token (')
   })
 
   it('renders the output of main() when the startup record is valid', function() {
@@ -78,17 +78,6 @@ describe('Grove', function() {
     }
     var g = Grove(records, receiveOutput)
     expect(lastOutput()[0]).toContain('&lt;script&gt;hacked&amp;')
-  })
-
-  it('allows main() to format text with LineBuffer', function() {
-    var records = {
-      'startup':
-        'function main() { '
-        + 'return LineBuffer().paste("hello", 0, {b: 1})'
-        + '}'
-    }
-    var g = Grove(records, receiveOutput)
-    expect(lastOutput()[0]).toContain('<span class="bold">hello</span>')
   })
 
   it('allows main() to return output as an array', function() {
