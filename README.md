@@ -65,9 +65,10 @@ more caution. They may drastically alter how the Grove
 system works, so software that you currently use might not
 run.
 
-Note that the version numbers are not decimal numbers, so
-versions 2.1 and 2.10 are different (2.10 is the next patch
-version after 2.9, and is pronounced "two-dot-ten").
+Note that the dot in a version number is just a divider, not
+a decimal point, so versions 2.1 and 2.10 are different
+(2.10 is the next patch version after 2.9, and is pronounced
+"two-dot-ten").
 
 What if you upgrade to the wrong version and want to go
 back? Assuming you kept your old Grove snapshots around,
