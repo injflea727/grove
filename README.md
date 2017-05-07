@@ -22,8 +22,8 @@ software for the Grove.
 1. Clone or download this repo.
 2. Be sure you have `node` and `npm` installed.
 3. Run `./build.sh` in the repo folder. This will run the
-   tests and create an `index.html` file.
-4. Open the created `index.html` file in a web browser.
+   tests and create a `grove.html` file.
+4. Open the created `grove.html` file in a web browser.
 
 ## User Guide
 
