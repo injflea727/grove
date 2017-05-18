@@ -75,3 +75,12 @@ back? Assuming you kept your old Grove snapshots around,
 you can just reuse an earlier snapshot. Also, you can always
 download old Grove versions from
 https://github.com/druidic/grove/releases.
+
+## Releasing
+
+1. Cut a branch from `develop` named `release/X`, where
+  `X` is the release (major version) number.
+2. Bump the version number in version.js and commit it
+3. Tag the commit with the version number, e.g. `vX.Y`
+4. Run `./build.sh` to generate `grove.html`
+5. Create a [Github release](https://github.com/druidic/grove/releases) and upload `grove.html`
