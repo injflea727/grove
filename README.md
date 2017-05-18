@@ -79,8 +79,12 @@ https://github.com/druidic/grove/releases.
 ## Releasing
 
 1. Cut a branch from `develop` named `release/X`, where
-  `X` is the release (major version) number.
-2. Bump the version number in version.js and commit it
-3. Tag the commit with the version number, e.g. `vX.Y`
-4. Run `./build.sh` to generate `grove.html`
-5. Create a [Github release](https://github.com/druidic/grove/releases) and upload `grove.html`
+  `X` is the release (major version) number. If you're
+  making a patch, checkout the branch for the release
+  you're patching and make your change.
+2. Bump the version number in version.js and commit it.
+3. Tag the commit with the version number, e.g. `vX.Y`.
+4. `git push origin HEAD` and `git push --tags`.
+5. Run `./build.sh` to generate `grove.html`.
+6. Create a [Github release](https://github.com/druidic/grove/releases)
+  and upload `grove.html`.
