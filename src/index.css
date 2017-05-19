@@ -141,9 +141,21 @@ body {
   cursor: not-allowed;
 }
 
-#terminal > p {
-  color: #00d840;
+#terminal > .rendering-layer {
+  /* rotate3d is a hack to get Chrome to render this
+   * element as a GPU texture separate from the rest of
+   * the window
+   */
+  transform: rotate3d(0, 0, 1, 0);
+  /* mix-blend-mode: screen makes the text and background
+   * look like they're both images projected on a screen.
+   * Gives that retro CRT effect.
+   */
   mix-blend-mode: screen;
+}
+
+#terminal p {
+  color: #00d840;
   margin: 0;
   padding: 0;
   height: 16.8px;
@@ -155,13 +167,6 @@ body {
   letter-spacing: -0.1px;
   white-space: pre;
   overflow: hidden;
-}
-
-#terminal > p span {
-  /* make the spans' background color cover the entire line
-   */
-  display: inline-block;
-  height: 16.8px;
 }
 
 #power-switch, #slot, #data-editor-button {
