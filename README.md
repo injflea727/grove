@@ -1,5 +1,7 @@
 # The Grove Virtual PC
 
+![Travis CI status](https://travis-ci.org/druidic/grove.svg?branch=master)
+
 The **Grove** is a virtual personal computer that runs in a
 web browser. You can write applications or operating systems
 in JavaScript that run on a Grove.
