@@ -33,10 +33,12 @@ click($diskSlot, function() {
   $recordsScript.textContent
     = 'var RECORDS = ' + JSON.stringify(dataRecords)
 
+  var now = new Date()
   var pageData = document.documentElement.outerHTML
   var blob = new Blob([pageData], {type: 'text/html'})
-  saveAs(blob, createFilename(getComputerName(dataRecords)))
-  lastSaveTimestamp = +(new Date())
+  var computerName = getComputerName(dataRecords)
+  saveAs(blob, QuineFilename(computerName, now))
+  lastSaveTimestamp = +now
 })
 
 click($showDataEditorButton, function() {

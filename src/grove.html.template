@@ -94,7 +94,7 @@
     </script>
     <script>
 #include src/getComputerName.js
-#include src/formatDateForFilename.js
+#include src/QuineFilename.js
 #include src/main.js
     </script>
   </body>
