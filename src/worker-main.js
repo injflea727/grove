@@ -1,14 +1,16 @@
 ;(function() {
 "use strict"
 
-var grove = Grove(RECORDS, redraw, notifyOfDataRecordChange)
+var grove = Grove(RECORDS, BrowserController(self))
 
 self.addEventListener('message', function(message) {
   var msgdata = message.data
   switch (msgdata.type) {
 
     case 'updateDataRecord':
-      updateDataRecord(msgdata.name, msgdata.content)
+      if (msgdata.name) {
+        grove.editEntry(msgdata.name, msgdata.content)
+      }
       break
 
     case 'keyDown':
@@ -20,25 +22,5 @@ self.addEventListener('message', function(message) {
       break
   }
 })
-
-function updateDataRecord(name, content) {
-  if (!name) return
-  grove.editEntry(name, content)
-}
-
-function notifyOfDataRecordChange(name, content) {
-  self.postMessage({
-    type: 'dataRecordChange',
-    name: name,
-    content: content
-  })
-}
-
-function redraw(trustedHTMLLines) {
-  self.postMessage({
-    type: 'redraw',
-    value: trustedHTMLLines
-  })
-}
 
 })();

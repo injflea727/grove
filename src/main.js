@@ -109,6 +109,8 @@ function handleMessageFromWorker(msg) {
       dataRecords[msg.data.name] = msg.data.content
       setTitleTo(getComputerName(dataRecords))
       break
+    case 'openUrl':
+      window.open(msg.data.url, '_blank')
   }
 }
 

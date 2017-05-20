@@ -1,14 +1,16 @@
 describe('Grove', function() {
-  var receiveOutput
-  var handleDataChange
+  var actions
 
   function lastOutput() {
-    return receiveOutput.calls.mostRecent().args[0]
+    return actions.redraw.calls.mostRecent().args[0]
   }
 
   beforeEach(function() {
-    receiveOutput = jasmine.createSpy('receiveOutput')
-    handleDataChange = jasmine.createSpy('handleDataChange')
+    actions = jasmine.createSpyObj([
+      'redraw',
+      'notifyOfDataRecordChange',
+      'openUrl'
+    ])
     jasmine.clock().install()
   })
 
@@ -17,18 +19,18 @@ describe('Grove', function() {
   })
 
   it('renders help text when there are no records', function() {
-    var g = Grove({}, receiveOutput)
-    expect(receiveOutput.calls.mostRecent().args[0][0])
+    var g = Grove({}, actions)
+    expect(actions.redraw.calls.mostRecent().args[0][0])
       .toContain("Grove")
 
-    expect(receiveOutput.calls.mostRecent().args[0][2])
+    expect(actions.redraw.calls.mostRecent().args[0][2])
       .toContain("no operating system installed yet")
   })
 
   it('does not react to keypresses when booting is not successful', function() {
-    var g = Grove({}, receiveOutput)
+    var g = Grove({}, actions)
     g.handleKeyDown({keyCode: 32})
-    expect(receiveOutput.calls.mostRecent().args[0][0])
+    expect(actions.redraw.calls.mostRecent().args[0][0])
       .toContain('Grove')
   })
 
@@ -37,7 +39,7 @@ describe('Grove', function() {
       'startup':
         'function ()'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('An error occurred while starting up:')
     expect(lastOutput()[1]).toContain('SyntaxError: Unexpected token (')
   })
@@ -47,7 +49,7 @@ describe('Grove', function() {
       'startup':
         'function main() { return "hello" }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('hello')
   })
 
@@ -56,7 +58,7 @@ describe('Grove', function() {
       'startup':
         'function main() { return Grove().toString() }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('The system encountered an error:')
     expect(lastOutput()[1]).toContain('TypeError: Grove is not a function')
   })
@@ -66,7 +68,7 @@ describe('Grove', function() {
       'startup':
         'function main() { return setTimeout().toString() }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('The system encountered an error:')
     expect(lastOutput()[1]).toContain('TypeError: setTimeout is not a function')
   })
@@ -76,7 +78,7 @@ describe('Grove', function() {
       'startup':
         'function main() { return "<script>hacked&" }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('&lt;script&gt;hacked&amp;')
   })
 
@@ -85,7 +87,7 @@ describe('Grove', function() {
       'startup':
         'function main() { return ["line 1", "line 2"] }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('line 1')
     expect(lastOutput()[1]).toContain('line 2')
   })
@@ -95,13 +97,13 @@ describe('Grove', function() {
       'startup':
         'function main() { return {screen: "foo"} }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('foo')
   })
 
   it('outputs the recordsystem state as json', function() {
     var records = { foo: 'bar' }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(g.getDataAsJSON()).toEqual('{"foo":"bar"}')
   })
 
@@ -110,7 +112,7 @@ describe('Grove', function() {
       'startup':
         'function main(evt) { return evt.type + ": " + evt.key }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
 
     expect(lastOutput()[0]).toContain('startup: undefined')
     g.handleKeyDown({keyCode: 32})
@@ -129,7 +131,7 @@ describe('Grove', function() {
       'startup':
         'var count = 0; function main(evt) { return "" + (count++) }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
 
     g.handleKeyDown({keyCode: 32})
     g.handleKeyDown({keyCode: 32})
@@ -144,7 +146,7 @@ describe('Grove', function() {
       'startup':
         'var count = 0; function main(evt) { return "" + (count++) }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
 
     g.handleKeyDown({keyCode: 32})
     g.handleKeyUp({keyCode: 32})
@@ -158,7 +160,7 @@ describe('Grove', function() {
       'startup':
         'function main(evt) { return evt.type + ": " + evt.key }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
 
     expect(lastOutput()[0]).toContain('startup: undefined')
     g.handleKeyUp({keyCode: 32})
@@ -171,7 +173,7 @@ describe('Grove', function() {
       'startup':
         'function main(evt) { if (evt.type === "keyDown") throw "kablooie"; return "ok" }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
 
     expect(function() { g.handleKeyDown({keyCode: 32}) })
       .not.toThrow()
@@ -187,7 +189,7 @@ describe('Grove', function() {
       'startup':
         'function main(evt) { if (evt.type === "keyDown") throw "kablooie"; return "ok" }'
     }
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     g.handleKeyDown({keyCode: 32})
     g.handleKeyUp({keyCode: 32})
 
@@ -205,12 +207,27 @@ describe('Grove', function() {
         + '} }'
     }
 
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('0')
     g.handleKeyDown({keyCode: 65})
     expect(lastOutput()[0]).toContain('1')
 
     expect(JSON.parse(g.getDataAsJSON()).count).toBe('2')
+  })
+
+  it('allows main() to open a URL in a new tab', function() {
+    var records = {
+      'startup':
+        'function main(event, data) {'
+        + 'return {'
+        + '  url: "https://example.com"'
+        + '} }'
+    }
+
+    var g = Grove(records, actions)
+
+    expect(actions.openUrl)
+      .toHaveBeenCalledWith('https://example.com')
   })
 
   it('notifies listeners of data record changes', function() {
@@ -224,10 +241,14 @@ describe('Grove', function() {
         + '} }'
     }
 
-    var g = Grove(records, receiveOutput, handleDataChange)
-    expect(handleDataChange).toHaveBeenCalledWith('count', '1')
+    var g = Grove(records, actions)
+    expect(actions.notifyOfDataRecordChange)
+      .toHaveBeenCalledWith('count', '1')
+
     g.handleKeyDown({keyCode: 65})
-    expect(handleDataChange).toHaveBeenCalledWith('count', '2')
+
+    expect(actions.notifyOfDataRecordChange)
+      .toHaveBeenCalledWith('count', '2')
   })
 
   it('calls main() for every frame of animation', function() {
@@ -239,7 +260,7 @@ describe('Grove', function() {
         + '}'
     }
 
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     g.handleClock()
     expect(lastOutput()[0]).toContain(1)
     g.handleClock()
@@ -251,7 +272,7 @@ describe('Grove', function() {
       'startup': 'var c=0; function main() { if(!c++) return "hello"; return null }'
     }
 
-    var g = Grove(records, receiveOutput)
+    var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('hello')
     g.handleClock()
     expect(lastOutput()[0]).toContain('hello')

@@ -89,6 +89,7 @@
 #include src/ReadOnly.js
 #include src/LineBuffer.js
 #include src/Grove.js
+#include src/BrowserController.js
 #include src/worker-main.js
     </script>
     <script>

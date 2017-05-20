@@ -19,16 +19,14 @@ var hasOwnProperty = Object.prototype.hasOwnProperty
  * Grove system, while keeping that logic isolated from
  * the browser environment (to make it easier to test).
  */
-function Grove (
-    records,
-    printTrustedOutput,
-    dataChangeCallback) {
+function Grove (records, actions) {
 
   "use strict"
 
   // === State variables ==================================
 
-  var data = DataRecorder(records, dataChangeCallback)
+  var data = DataRecorder(
+    records, actions.notifyOfDataRecordChange)
   var main = null
   var keysHeld = {}
   var permanentErrorOutput = null
@@ -109,7 +107,7 @@ function Grove (
     if (!main) return
 
     if (permanentErrorOutput) {
-      printTrustedOutput(permanentErrorOutput)
+      actions.redraw(permanentErrorOutput)
       return
     }
 
@@ -143,6 +141,10 @@ function Grove (
       updateDataRecorder(output.records)
     }
 
+    if (output.url) {
+      actions.openUrl(output.url)
+    }
+
     if (hasOwnProperty.call(output, 'screen')) {
       output = output.screen
     }
@@ -162,7 +164,7 @@ function Grove (
   }
 
   function printStartupJsNotFoundError () {
-    printTrustedOutput([
+    actions.redraw([
       "Grove " + VERSION,
       "",
       "Welcome! This Grove has no operating system installed yet.",
@@ -184,7 +186,7 @@ function Grove (
   }
 
   function printLineBuffers(lineBuffers) {
-    printTrustedOutput(lineBuffers.map(function(buffer) {
+    actions.redraw(lineBuffers.map(function(buffer) {
       return buffer.toHTML()
     }))
   }
