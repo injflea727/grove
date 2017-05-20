@@ -88,7 +88,6 @@
 #include src/DataRecorder.js
 #include src/ReadOnly.js
 #include src/LineBuffer.js
-#include src/Style.js
 #include src/Grove.js
 #include src/worker-main.js
     </script>
