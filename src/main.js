@@ -24,6 +24,7 @@ var lastSaveTimestamp = +(new Date())
 var groveWorker = GroveWorker(
   dataRecords,
   handleMessageFromWorker)
+var urlToOpen = null
 
 setTitleTo(getComputerName(dataRecords))
 
@@ -89,6 +90,13 @@ window.addEventListener('keydown', function(e) {
     e.preventDefault()
     groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
   }
+
+  setTimeout(function() {
+    if (urlToOpen) {
+      window.open(urlToOpen, '_blank')
+    }
+    urlToOpen = null
+  }, 250)
 })
 
 window.addEventListener('keyup', function(e) {
@@ -110,7 +118,8 @@ function handleMessageFromWorker(msg) {
       setTitleTo(getComputerName(dataRecords))
       break
     case 'openUrl':
-      window.open(msg.data.url, '_blank')
+      urlToOpen = urlToOpen || msg.data.url
+      break
   }
 }
 
