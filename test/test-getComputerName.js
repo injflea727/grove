@@ -3,9 +3,9 @@ describe('getComputerName', function() {
     expect(getComputerName({})).toBe('grove')
   })
 
-  it('returns the value in system/name', function() {
+  it('returns the value in the `name` record', function() {
     var records = {
-      'system/name' : 'custom name'
+      'name' : 'custom name'
     }
     expect(getComputerName(records)).toBe('custom name')
   })

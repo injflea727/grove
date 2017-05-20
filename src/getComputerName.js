@@ -1,3 +1,3 @@
 function getComputerName(records) {
-  return records['system/name'] || 'grove'
+  return records['name'] || 'grove'
 }
