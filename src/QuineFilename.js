@@ -1,10 +1,22 @@
 function formatDateForFilename(date) {
-  var parts = date.toISOString().split(/[\-T:\.]/)
-  return parts.slice(0, 3).join('-') + '_'
-    + parts.slice(3, 6).join('-')
+  var yyyy = date.getFullYear()
+  var mo   = zeropad(date.getMonth() + 1)
+  var dd   = zeropad(date.getDate())
+  var hh   = zeropad(date.getHours())
+  var mm   = zeropad(date.getMinutes())
+  var ss   = zeropad(date.getSeconds())
+
+  return [yyyy, mo, dd].join('-')
+    + '__' + [hh, mm, ss].join('-')
+}
+
+function zeropad(n) {
+  var s = n.toString()
+  return s.length == 1 ? '0' + s : s
 }
 
 function QuineFilename(name, date) {
-  var nameReplaced = name.replace(/[^a-zA-Z0-9\-_\.]/g, '-')
-  return nameReplaced + '_' + formatDateForFilename(date)
+  var noBadChars = name.replace(/[^a-zA-Z0-9\-_\.]/g, '-')
+  return noBadChars + '_' + formatDateForFilename(date)
+    + '.html'
 }
