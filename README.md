@@ -84,7 +84,7 @@ The below description of the release process applies only
 to beta releases (version 0.X). Once version 1.0 is
 released, the process will change.
 
-1. Cut a branch from `develop` named `release/0.X`, where
+1. Cut a branch from `master` named `release/0.X`, where
   `X` is the version number.
 2. Bump the version number in version.js and commit it.
 3. Tag the commit with the version number in the format
