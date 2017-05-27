@@ -29,7 +29,7 @@ If you find yourself nodding at any of the following, you just might love the Gr
   - JavaScript development has taken a maximalist turn over the last few years.
     The community's response to every perceived problem with web programming has been
     to just layer on more and more powerful tools. The problem with adding more stuff
-    to the developement stack is that the stack is only as robust as its weakest link,
+    to the development stack is that the stack is only as robust as its weakest link,
     and when that weak link breaks there's a lot more stuff you have to understand
     before you can fix it.
     
