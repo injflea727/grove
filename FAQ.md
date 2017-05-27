@@ -1,36 +1,50 @@
 ## Who is this for?
 
-A few types of people might find the Grove useful:
+If you find yourself nodding at any of the following, you just might love the Grove:
 
-- People who want to learn to program, but are put off by the amount of background
-  knowledge (e.g. Unix, compilers, frameworks) necessary to create anything
-  really useful.
-- Power users who spend a lot of time writing (code or otherwise) on different
-  operating systems, and who don't want to have to switch their mental keymap
-  every time they switch platforms.
-- People who want explicit, fine-grained control over the entirety of a system,
-  but who find customizing Linux too complex for their purposes.
-- People with repetitive motion injuries from using a mouse or trackpad (the
-  Grove is keyboard-only).
-- Programmers who enjoy working on JavaScript hobby projects but find themselves
-  spending more time crafting build systems and wrangling frameworks than actually
-  writing production code.
-
-Then there are the people who might find the Grove more beautiful than useful.
-They might treat it as an art project or a thought experiment.
-
-- People who envision a world where software companies don't mediate our
-  every interaction, and where computers are no longer
-  [optimized for addictiveness](http://www.timewellspent.io/).
-- Functional programming dabblers (the truly obsessed aren't going to like
-  JavaScript's dynamic typing) who are curious about what an ecosystem of
-  purely functional programs might look like.
-- People who want to feel like they are t3h l33t haxx0rz.
-- People who like the idea of [TempleOS](http://templeos.org/) but who don't
-  want to be associated with its creator's racist conspiracy theories or
-  unusual theology.
-
-There's overlap between these groups, of course. I'm in all of them.
+- **You want to learn to program, but are put off by the avalanche of
+  cryptic error messages you always get whenever you try.**
+  - Programming doesn't have to be frustrating! But all too often, it is, because
+    we're still using operating systems that were created in the '70s for
+    mainframes. The Grove makes programming simple.
+- **You've configured your own computers just so. But sometimes
+  you're visiting friends or family and you have to use *their* computers, and not
+  having access to your favorite productivity apps and shortcuts is a nightmare.**
+  - The Grove is portable; your entire system packs up into a fun-size HTML file
+    that you can use on just about any computer. Your Grove goes where you go.
+    You'll never have to install Vim plugins on a friend's computer again.
+- **Your old computer died. You bought a new one from the same company but everything
+  looks and acts different. Why do these &%$@!$\* $\*&@\*!#@s keep
+  *changing stuff for no &@$&@#\* reason?***
+  - The Grove doesn't update itself, and old versions will always remain available.
+    Its only requirement is a web browser, and since web browsers have to support
+    old websites they're unlikely to break compatibility. The Grove is as permanent
+    as any computer system can be.
+- **You have repetitive motion injuries from using a mouse or trackpad.**
+  - The Grove is not intended to diagnose, cure, treat, or prevent any ailment, and
+    these statements have not been evaluated by the FDA. But the Grove's
+    keyboard-only interactions put much less strain on your wrists than a traditional
+    mouse + keyboard setup.
+- **You're a programmer with [JavaScript fatigue](https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f).**
+  - JavaScript development has taken a maximalist turn over the last few years.
+    The community's response to every perceived problem with web programming has been
+    to just layer on more and more powerful tools. The problem with adding more stuff
+    to the developement stack is that the stack is only as robust as its weakest link,
+    and when that weak link breaks there's a lot more stuff you have to understand
+    before you can fix it.
+    
+    To program for the Grove, all you need to do is write code.
+- **You dream of a world where software companies don't mediate our every interaction,
+  and where computers are no longer [optimized for addictiveness](http://www.timewellspent.io/).**
+  - Ad-supported software creates a perverse incentive for the companies that create it.
+    Users may just want to log in, accomplish their goal, and get on with their lives.
+    The software company, on the other hand, wants to distract users for as long as
+    possible so they see more ads, and keep them coming back with addictive intermittent
+    rewards.
+    
+    The Grove will never show you ads. It can't connect to the Web, so app developers
+    can't mine your attention for profit. When you're using a Grove, it's just you
+    and the task at hand.
 
 ## Won't storing all my data in one HTML file cause my computer to run out of memory?
 
