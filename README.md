@@ -34,7 +34,8 @@ software for the Grove.
 ## User Guide
 
 For more information on how to use a Grove, check out the
-user guide at https://druidic.github.io/grove/guide.
+user guide at
+https://github.com/druidic/grove/blob/master/docs/index.md.
 
 ## Version numbering system
 
