@@ -45,4 +45,16 @@ describe('BrowserController', function() {
         })
     })
   })
+
+  describe('displayInNewWindow', function() {
+    it('posts a message to the browser window', function() {
+      controller.displayInNewWindow('hello, world!')
+
+      expect(workerGlobal.postMessage)
+        .toHaveBeenCalledWith({
+          type: 'displayInNewWindow',
+          content: 'hello, world!'
+        })
+    })
+  })
 })

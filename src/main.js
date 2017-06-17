@@ -24,6 +24,7 @@ var groveWorker = GroveWorker(
   dataRecords,
   handleMessageFromWorker)
 var urlToOpen = null
+var contentToDisplayInNewWindow = null
 
 setTitleTo(getComputerName(dataRecords))
 
@@ -95,6 +96,14 @@ window.addEventListener('keydown', function(e) {
       window.open(urlToOpen, '_blank')
     }
     urlToOpen = null
+
+    if (contentToDisplayInNewWindow) {
+      var newWindow = window.open('', '_blank')
+      newWindow.document.open()
+      newWindow.document.write(contentToDisplayInNewWindow)
+      newWindow.document.close()
+    }
+    contentToDisplayInNewWindow = null
   }, 250)
 })
 
@@ -119,6 +128,9 @@ function handleMessageFromWorker(msg) {
     case 'openUrl':
       urlToOpen = urlToOpen || msg.data.url
       break
+    case 'displayInNewWindow':
+      contentToDisplayInNewWindow
+        = contentToDisplayInNewWindow || msg.data.content
   }
 }
 

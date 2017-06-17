@@ -142,6 +142,10 @@ function Grove (records, actions) {
       actions.openUrl(output.url)
     }
 
+    if (output.print) {
+      actions.displayInNewWindow(output.print)
+    }
+
     if (hasOwnProperty.call(output, 'screen')) {
       output = output.screen
     }

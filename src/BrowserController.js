@@ -12,7 +12,8 @@ function BrowserController(workerGlobal) {
   return {
     redraw: redraw,
     openUrl: openUrl,
-    notifyOfDataRecordChange: notifyOfDataRecordChange
+    notifyOfDataRecordChange: notifyOfDataRecordChange,
+    displayInNewWindow: displayInNewWindow
   }
 
   // --- Public function definitions -----------------------
@@ -35,6 +36,13 @@ function BrowserController(workerGlobal) {
     workerGlobal.postMessage({
       type: 'dataRecordChange',
       name: name,
+      content: content
+    })
+  }
+
+  function displayInNewWindow(content) {
+    workerGlobal.postMessage({
+      type: 'displayInNewWindow',
       content: content
     })
   }

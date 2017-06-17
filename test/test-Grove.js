@@ -9,7 +9,8 @@ describe('Grove', function() {
     actions = jasmine.createSpyObj([
       'redraw',
       'notifyOfDataRecordChange',
-      'openUrl'
+      'openUrl',
+      'displayInNewWindow'
     ])
     jasmine.clock().install()
   })
@@ -228,6 +229,21 @@ describe('Grove', function() {
 
     expect(actions.openUrl)
       .toHaveBeenCalledWith('https://example.com')
+  })
+
+  it('allows main() to display text or HTML in a new tab', function() {
+    var records = {
+      'startup':
+        'function main(event, data) {'
+        + 'return {'
+        + '  print: "so message, very text"'
+        + '} }'
+    }
+
+    var g = Grove(records, actions)
+
+    expect(actions.displayInNewWindow)
+      .toHaveBeenCalledWith('so message, very text')
   })
 
   it('notifies listeners of data record changes', function() {
