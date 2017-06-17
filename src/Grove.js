@@ -5,7 +5,6 @@
  * things that it shouldn't.
  */
 function wrappedEval (code) {
-  "use strict"
   var Grove
   return eval(code)
 }
@@ -20,8 +19,6 @@ var hasOwnProperty = Object.prototype.hasOwnProperty
  * the browser environment (to make it easier to test).
  */
 function Grove (records, actions) {
-
-  "use strict"
 
   // === State variables ==================================
 

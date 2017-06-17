@@ -1,5 +1,4 @@
 ;(function() {
-"use strict"
 
 var $ = document.querySelectorAll.bind(document)
 

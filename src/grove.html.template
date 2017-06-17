@@ -84,6 +84,7 @@
 
     <!-- this script gets run in a web worker -->
     <script type="dont-run-in-main-thread" id="grove-worker">
+"use strict";
 #include src/version.js
 #include src/DataRecorder.js
 #include src/ReadOnly.js
@@ -93,6 +94,7 @@
 #include src/worker-main.js
     </script>
     <script>
+"use strict";
 #include src/getComputerName.js
 #include src/QuineFilename.js
 #include src/main.js

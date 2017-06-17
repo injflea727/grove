@@ -1,5 +1,4 @@
 ;(function() {
-"use strict"
 
 var grove = Grove(RECORDS, BrowserController(self))
 
