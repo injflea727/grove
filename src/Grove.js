@@ -101,6 +101,8 @@ function Grove (records, actions) {
   }
 
   function runMainAndPrintOutput(event) {
+    var results
+
     if (!main) return
 
     if (permanentErrorOutput) {
@@ -108,12 +110,11 @@ function Grove (records, actions) {
       return
     }
 
-    var output
     try {
-      output = main(event, ReadOnly(data))
+      results = main(event, ReadOnly(data))
     } catch(e) {
       var errorColors = {fg: 'black', bg: 'red', b: 1}
-      output = permanentErrorOutput = [
+      results = permanentErrorOutput = [
         'The system encountered an error:',
         e.toString(),
         '',
@@ -126,35 +127,24 @@ function Grove (records, actions) {
      * needs to be performed. This can be used as a performance
      * optimization since the OS can avoid recomputing the
      * screen buffer. */
-    if (output === null) {
-      return
+
+    results = MainResults(results)
+
+    if (results.records) {
+      updateDataRecorder(results.records)
     }
 
-    if (output === undefined) {
-      output = '' + output
+    if (results.url) {
+      actions.openUrl(results.url)
     }
 
-    if (output.records) {
-      updateDataRecorder(output.records)
+    if (results.print) {
+      actions.displayInNewWindow(results.print)
     }
 
-    if (output.url) {
-      actions.openUrl(output.url)
+    if (results.shouldRedraw) {
+      printLineBuffers(results.screen.map(LineBuffer))
     }
-
-    if (output.print) {
-      actions.displayInNewWindow(output.print)
-    }
-
-    if (hasOwnProperty.call(output, 'screen')) {
-      output = output.screen
-    }
-
-    if (output.constructor !== Array) {
-      output = [output]
-    }
-
-    printLineBuffers(output.map(LineBuffer))
   }
 
   function printErrorFromStartup (e) {
