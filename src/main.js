@@ -67,6 +67,8 @@ click($dataEditorSaveButton, function() {
 })
 
 click($powerSwitch, function() {
+  urlToOpen = null
+  contentToDisplayInNewWindow = null
   if (groveWorker) {
     // turn off
     groveWorker.terminate()
@@ -89,22 +91,22 @@ window.addEventListener('keydown', function(e) {
   if (groveCanReceiveKeyEvents()) {
     e.preventDefault()
     groveWorker.postMessage({type: 'keyDown', event: {keyCode: e.keyCode}})
+
+    setTimeout(function() {
+      if (urlToOpen) {
+        window.open(urlToOpen, '_blank')
+      }
+      urlToOpen = null
+
+      if (contentToDisplayInNewWindow) {
+        var newWindow = window.open('', '_blank')
+        newWindow.document.open()
+        newWindow.document.write(contentToDisplayInNewWindow)
+        newWindow.document.close()
+      }
+      contentToDisplayInNewWindow = null
+    }, 250)
   }
-
-  setTimeout(function() {
-    if (urlToOpen) {
-      window.open(urlToOpen, '_blank')
-    }
-    urlToOpen = null
-
-    if (contentToDisplayInNewWindow) {
-      var newWindow = window.open('', '_blank')
-      newWindow.document.open()
-      newWindow.document.write(contentToDisplayInNewWindow)
-      newWindow.document.close()
-    }
-    contentToDisplayInNewWindow = null
-  }, 250)
 })
 
 window.addEventListener('keyup', function(e) {
