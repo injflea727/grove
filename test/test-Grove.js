@@ -246,6 +246,21 @@ describe('Grove', function() {
       .toHaveBeenCalledWith('so message, very text')
   })
 
+  it('does not display anything in a new tab when no "print" output is given', function() {
+    var records = {
+      'startup':
+        'function main(event, data) {'
+        + 'return {'
+        + '  screen: "whatever"'
+        + '} }'
+    }
+
+    var g = Grove(records, actions)
+
+    expect(actions.displayInNewWindow)
+      .not.toHaveBeenCalled()
+  })
+
   it('notifies listeners of data record changes', function() {
     var records = {
       'startup':

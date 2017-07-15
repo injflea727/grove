@@ -138,7 +138,7 @@ function Grove (records, actions) {
       actions.openUrl(results.url)
     }
 
-    if (results.print) {
+    if (results.shouldPrint) {
       actions.displayInNewWindow(results.print)
     }
 
