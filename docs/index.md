@@ -49,7 +49,7 @@ hardware.
 
 #### The power button
 
-The power button is located on the bottom left size of
+The power button is located on the bottom left side of
 the virtual computer case. Try clicking it; the virtual
 monitor will blank out, indicating that the Grove has turned
 off. Click the button again to turn the Grove back on.
@@ -62,29 +62,47 @@ serves a similar function. It allows you to save a copy of
 your Grove system.
 
 Click the disk drive slot. A file will download. If you open
-that file in your browser, you'll see that it's simply a
-copy of the Grove computer you already have open.
+that file in your browser, you'll see that it's a copy of
+the Grove computer you already have open.
 
-Since you haven't yet stored any data to your brand-new
-Grove, the save file is redundant. Feel free to delete it.
+Since you haven't yet loaded any data into your brand-new
+Grove, the save file is redundant. Feel free to move it to
+the trash (or the equivalent on your system) to get rid of
+it.
 
-#### The data recorder
+#### The display
 
-Speaking of storing data, how about we try to do that now?
+The Grove has a monochrome character-grid display that can
+render 32 lines of text with 64 characters per line.
+
+### Renaming the Grove
+
+Let's personalize your new Grove by loading some data into
+it. We're going to give this computer a name.
+
+Currently your computer has the default name "grove"—you
+should see the name displayed somewhere near the top of your
+browser window. Let's change it to something with a little
+more flair.
 
 Near the bottom-right corner of the Grove's case is a small,
-unlabeled button that gives you access to the Data Recorder.
-It's small and unlabeled because most users will never
-touch it, unless they're software developers.
+unlabeled button that gives you access to the Grove's
+internal data records. Click it, and a window will pop up.
+In the narrow text field near the top, type `name`. In the
+bigger text field, type a new name for your computer.
 
-But *you're* not afraid of being a software developer,
-right? Let's write a simple program to demonstrate just how
-easy it is to program a Grove.
+Click the "Save" button. Notice that the name in your
+browser tab changes. Click the red "X" to close the Data
+Recorder window.
 
-Click the button. The Data Recorder window will pop up.
-In the narrow text field near the top, type `startup`.
-In the bigger text field, type (or paste) the code below.
-Either way, make sure to enter it exactly as shown.
+Now click the disk drive slot again. This time, the
+downloaded file has the name you just typed.
+
+### Writing a program
+
+Open the Data Recorder window again. In the bigger text
+field, type (or paste) the code below. Either way, make sure
+to enter it exactly as shown.
 
 ```javascript
 function main(event) {
@@ -98,21 +116,10 @@ When you're done, it should look like this:
 
 ![The Data Recorder with code entered in the startup record](./tutorial-data-recorder.png)
 
-Click the "Save" button and close the window by clicking
-the red `X` button at the top.
+Click the "Save" button and close the window by clicking the
+red `X` button at the top.
 
 Now click the power button twice to turn the Grove off and
 on again. You should see your program running—it will have
 displayed "Press any key" on the screen. Press any key
 and watch what happens.
-
-### Software
-#### Rune
-#### Calculator
-#### Timer
-#### File Browser
-## The Grove Operating System (Grove OS)
-## Adding and removing applications
-## Installing A Different Operating System
-## Writing new applications
-## Writing new operating systems
