@@ -158,12 +158,12 @@ function setTitleTo(title) {
 }
 
 var previouslyDrawn = []
+var lineElements = $('#terminal p')
 function redraw(text, force) {
-  var lineElements = $('#terminal p')
   for (var i = 0; i < lineElements.length; i++) {
     var toDraw = text[i] || ''
     if (force || toDraw !== previouslyDrawn[i]) {
-      lineElements[i].innerHTML = toDraw
+      lineElements[i].innerText = toDraw
       previouslyDrawn[i] = toDraw
     }
   }
