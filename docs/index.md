@@ -21,6 +21,7 @@ In preparing the manual, I have aimed for clarity, and,
 where possible, brevity. If you find places where the manual
 could be improved, please send feedback to
 
+Ben Christel
 the.wizard.ben@gmail.com
 
 ## Tutorial: Getting started
