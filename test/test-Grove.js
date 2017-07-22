@@ -74,13 +74,13 @@ describe('Grove', function() {
     expect(lastOutput()[1]).toContain('TypeError: setTimeout is not a function')
   })
 
-  it('escapes HTML in data output from main()', function() {
+  it('does not escape HTML in output from main()', function() {
     var records = {
       'startup':
-        'function main() { return "<script>hacked&" }'
+        'function main() { return "<span>&" }'
     }
     var g = Grove(records, actions)
-    expect(lastOutput()[0]).toContain('&lt;script&gt;hacked&amp;')
+    expect(lastOutput()[0]).toContain('<span>&')
   })
 
   it('allows main() to return output as an array', function() {
