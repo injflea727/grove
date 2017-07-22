@@ -1,4 +1,4 @@
-DataRecorder = function(entries, changeCallback) {
+function DataRecorder(entries, changeCallback) {
   var recorder = {}
   var changeCallback = changeCallback || function() {}
 
