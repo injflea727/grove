@@ -94,3 +94,6 @@ released, the process will change.
 5. Run `./build.sh` to generate `grove.html`.
 6. Create a [Github release](https://github.com/druidic/grove/releases)
   and upload `grove.html`.
+7. Upgrade the druidic.github.io website to the new version
+  of the Grove. Update the download link to point to the
+  `grove.html` file in the latest release.
