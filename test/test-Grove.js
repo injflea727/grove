@@ -61,7 +61,7 @@ describe('Grove', function() {
     }
     var g = Grove(records, actions)
     expect(lastOutput()[0]).toContain('The system encountered an error:')
-    expect(lastOutput()[1]).toContain('TypeError: Grove is not a function')
+    expect(lastOutput()[1]).toContain('ReferenceError: Grove is not defined')
   })
 
   it('does not allow the main() function to access global functions', function() {

@@ -1,14 +1,3 @@
-/**
- * The purpose of wrappedEval is to limit the set of
- * variables that are in scope when `eval` is called. This
- * makes it easier to prevent eval'd code from accessing
- * things that it shouldn't.
- */
-function wrappedEval (code) {
-  var Grove
-  return eval(code)
-}
-
 var hasOwnProperty = Object.prototype.hasOwnProperty
 
 /**
@@ -84,19 +73,8 @@ function Grove (records, actions) {
     })
   }
 
-  function runnableStartupScript (src) {
-    var scriptText = '(function(){'
-      + 'var ' + Object.keys(getGlobalObject()).join(',')
-      + ';' + src
-      + 'return main'
-      + '})()'
-
-    return scriptText
-  }
-
   function bootFromStartupScript () {
-    var script = runnableStartupScript(getStartupJs())
-    main = wrappedEval(script)
+    main = sandboxedEval(getStartupJs())
     runMainAndPrintOutput({type: 'startup'})
   }
 
@@ -184,13 +162,6 @@ function Grove (records, actions) {
 
   function getStartupJs() {
     return data.read('startup')
-  }
-
-  function getGlobalObject () {
-    if (typeof self !== 'undefined') {
-      return self
-    }
-    return global
   }
 
   function updateDataRecorder(newRecords) {
