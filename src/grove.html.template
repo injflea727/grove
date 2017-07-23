@@ -53,9 +53,9 @@
         </div>
       </div>
       <div id="controls">
-        <div id="power-switch">0/1</div>
-        <div id="slot"></div>
-        <div id="data-editor-button"></div>
+        <div id="power-switch" title="Toggle power">0/1</div>
+        <div id="slot" title="Save a copy"></div>
+        <div id="data-editor-button" title="Load data"></div>
       </div>
     </div>
 
