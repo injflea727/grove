@@ -1,6 +1,6 @@
-describe('LineBuffer', function() {
+describe('makeScreenWidth', function() {
   it('assumes an empty string if instantiated with no args', function() {
-    expect(LineBuffer().toHTML()).toBe(_64_SPACES)
+    expect(makeScreenWidth()).toBe(_64_SPACES)
   })
 
   it('stringifies numeric inputs', function() {
@@ -8,7 +8,7 @@ describe('LineBuffer', function() {
       = '0                               '
       + '                                '
 
-    expect(LineBuffer(0).toHTML()).toBe(expected)
+    expect(makeScreenWidth(0)).toBe(expected)
   })
 
   it('stringifies null inputs', function() {
@@ -16,7 +16,7 @@ describe('LineBuffer', function() {
       = 'null                            '
       + '                                '
 
-    expect(LineBuffer(null).toHTML()).toBe(expected)
+    expect(makeScreenWidth(null)).toBe(expected)
   })
 
   it('pads a short line to 64 chars', function() {
@@ -25,8 +25,8 @@ describe('LineBuffer', function() {
       = 'asdf                            '
       + '                                '
 
-    expect(LineBuffer(input).toHTML()).toBe(expected)
-    expect(LineBuffer(input).toHTML().length).toBe(64)
+    expect(makeScreenWidth(input)).toBe(expected)
+    expect(makeScreenWidth(input).length).toBe(64)
   })
 
   it('truncates a long line to 64 chars', function() {
@@ -39,8 +39,8 @@ describe('LineBuffer', function() {
       = '1234567890abcdef1234567890abcdef'
       + '1234567890abcdef1234567890abcdef'
 
-    expect(LineBuffer(input).toHTML()).toBe(expected)
-    expect(LineBuffer(input).toHTML().length).toBe(64)
+    expect(makeScreenWidth(input)).toBe(expected)
+    expect(makeScreenWidth(input).length).toBe(64)
   })
 
   it('outputs 64 spaces given an empty string', function() {
@@ -49,7 +49,7 @@ describe('LineBuffer', function() {
       = '                                '
       + '                                '
 
-    expect(LineBuffer(input).toHTML()).toBe(expected)
-    expect(LineBuffer(input).toHTML().length).toBe(64)
+    expect(makeScreenWidth(input)).toBe(expected)
+    expect(makeScreenWidth(input).length).toBe(64)
   })
 })

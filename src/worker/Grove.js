@@ -121,14 +121,14 @@ function Grove (records, actions) {
     }
 
     if (results.shouldRedraw) {
-      printLineBuffers(results.screen.map(LineBuffer))
+      print(results.screen)
     }
   }
 
   function printErrorFromStartup (e) {
-    printLineBuffers([
-      LineBuffer('An error occurred while starting up:'),
-      LineBuffer(e.toString())
+    print([
+      'An error occurred while starting up:',
+      e.toString()
     ])
   }
 
@@ -154,10 +154,8 @@ function Grove (records, actions) {
     ])
   }
 
-  function printLineBuffers(lineBuffers) {
-    actions.redraw(lineBuffers.map(function(buffer) {
-      return buffer.toHTML()
-    }))
+  function print(lines) {
+    actions.redraw(lines.map(makeScreenWidth))
   }
 
   function getStartupJs() {
