@@ -1,31 +1,31 @@
-function DataRecorder(entries, changeCallback) {
+function DataRecorder(records, changeCallback) {
   var recorder = {}
   var changeCallback = changeCallback || function() {}
 
-  recorder.read = function(entryName) {
-    if (isNotString(entryName)) {
-      throw Error('DataRecorder#read expects to be called with a string, but got ' + entryName)
+  recorder.read = function(recordName) {
+    if (isNotString(recordName)) {
+      throw Error('DataRecorder#read expects to be called with a string, but got ' + recordName)
     }
-    return entries[entryName] || ''
+    return records[recordName] || ''
   }
 
-  recorder.write = function(entryName, content) {
-    if (isNotString(entryName) || isNotString(content)) {
-      throw Error('DataRecorder#write expects to be called with two strings, but got ' + entryName + ', ' + content)
+  recorder.write = function(recordName, content) {
+    if (isNotString(recordName) || isNotString(content)) {
+      throw Error('DataRecorder#write expects to be called with two strings, but got ' + recordName + ', ' + content)
     }
 
     if (content === '') {
-      delete entries[entryName]
+      delete records[recordName]
     } else {
-      entries[entryName] = content
+      records[recordName] = content
     }
 
-    changeCallback(entryName, content)
+    changeCallback(recordName, content)
     return recorder
   }
 
   recorder.toJSON = function() {
-    return JSON.stringify(entries)
+    return JSON.stringify(records)
   }
 
   function isNotString(thing) {

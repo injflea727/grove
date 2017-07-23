@@ -55,15 +55,15 @@
       <div id="controls">
         <div id="power-switch" title="Toggle power">0/1</div>
         <div id="slot" title="Save a copy"></div>
-        <div id="data-editor-button" title="Load data"></div>
+        <div id="load-data-button" title="Load data"></div>
       </div>
     </div>
 
     <div id="overlay">
-      <div id="data-record-modal">
+      <div id="load-data-modal">
         <div class="close-button">
           <div class="title">
-            Data Recorder
+            Load Data
           </div>
           <button>x</button>
         </div>

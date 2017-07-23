@@ -1,15 +1,15 @@
 describe('DataRecorder', function() {
-  it('lets you read an entry', function() {
+  it('lets you read a record', function() {
     expect(DataRecorder({foo: 'bar'}).read('foo')).toEqual('bar')
   })
 
-  it('treats nonexistent entries as having empty content', function() {
+  it('treats nonexistent records as having empty content', function() {
     var rec = DataRecorder({})
 
     expect(rec.read('foo')).toEqual('')
   })
 
-  it('lets you write an entry', function() {
+  it('lets you write a record', function() {
     var rec = DataRecorder({})
     rec.write('foo', 'bar')
 
@@ -34,9 +34,9 @@ describe('DataRecorder', function() {
     expect(rec.toJSON()).toEqual('{"a":"b","c":"d"}')
   })
 
-  it('deletes an entry when an empty string is set as the content', function() {
-    var entries = {deleteme: 'foo'}
-    var rec = DataRecorder(entries)
+  it('deletes a record when an empty string is set as the content', function() {
+    var records = {deleteme: 'foo'}
+    var rec = DataRecorder(records)
 
     rec.write('deleteme', '')
 

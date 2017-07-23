@@ -8,7 +8,7 @@ self.addEventListener('message', function(message) {
 
     case 'updateDataRecord':
       if (msgdata.name) {
-        grove.editEntry(msgdata.name, msgdata.content)
+        grove.writeRecord(msgdata.name, msgdata.content)
       }
       break
 

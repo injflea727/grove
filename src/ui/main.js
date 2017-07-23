@@ -10,11 +10,11 @@ var $powerSwitch = $('#power-switch')[0]
 var $recordsScript = $('#records')[0]
 var $groveWorkerScript = $('#grove-worker')[0]
 var $modalOverlay = $('#overlay')[0]
-var $hideDataEditorButton = $('#data-record-modal .close-button button')[0]
-var $showDataEditorButton = $('#data-editor-button')[0]
-var $entryNameInput = $('#data-record-modal .data-record-selector input')[0]
-var $entryContentInput = $('#data-record-modal textarea')[0]
-var $dataEditorSaveButton = $('#data-record-modal .save')[0]
+var $hideDataLoaderButton = $('#load-data-modal .close-button button')[0]
+var $showDataLoaderButton = $('#load-data-button')[0]
+var $recordNameInput = $('#load-data-modal .data-record-selector input')[0]
+var $recordContentInput = $('#load-data-modal textarea')[0]
+var $dataEditorSaveButton = $('#load-data-modal .save')[0]
 var $title = $('head title')[0]
 
 // --- Initial state --------------------------------------
@@ -43,18 +43,18 @@ click($diskSlot, function() {
   lastSaveTimestamp = +now
 })
 
-click($showDataEditorButton, function() {
+click($showDataLoaderButton, function() {
   $modalOverlay.style.display = 'block';
-  $entryNameInput.focus()
+  $recordNameInput.focus()
 })
 
-click($hideDataEditorButton, function() {
+click($hideDataLoaderButton, function() {
   $modalOverlay.style.display = 'none';
 })
 
 click($dataEditorSaveButton, function() {
-  var name    = $entryNameInput.value
-  var content = $entryContentInput.value
+  var name    = $recordNameInput.value
+  var content = $recordContentInput.value
 
   if (!name) return
 

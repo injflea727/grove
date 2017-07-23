@@ -34,7 +34,7 @@ function Grove (records, actions) {
   // === Public interface declaration =====================
 
   return {
-    editEntry:     editEntry,
+    writeRecord:   writeRecord,
     getDataAsJSON: getDataAsJSON,
     handleKeyDown: handleKeyDown,
     handleKeyUp:   handleKeyUp,
@@ -43,7 +43,7 @@ function Grove (records, actions) {
 
   // === Public function definitions ======================
 
-  function editEntry(name, content) {
+  function writeRecord(name, content) {
     data = data.write(name, content)
   }
 
