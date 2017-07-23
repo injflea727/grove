@@ -15,7 +15,7 @@
   <body>
     <div id="case">
       <div id="bezel">
-        <div id="terminal">
+        <div id="display">
           <div class="rendering-layer">
             <p id="l0">Initializing... </p>
             <p id="l1"></p>

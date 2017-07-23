@@ -4,6 +4,7 @@ var $ = document.querySelectorAll.bind(document)
 
 // --- DOM elements ---------------------------------------
 
+var $display = $('#display')[0]
 var $diskSlot = $('#slot')[0]
 var $powerSwitch = $('#power-switch')[0]
 var $recordsScript = $('#records')[0]
@@ -20,13 +21,13 @@ var $title = $('head title')[0]
 
 var dataRecords = RECORDS
 var lastSaveTimestamp = +(new Date())
-var groveWorker = GroveWorker(
-  dataRecords,
-  handleMessageFromWorker)
 var urlToOpen = null
 var contentToDisplayInNewWindow = null
+var groveWorker = null
 
 setTitleTo(getComputerName(dataRecords))
+
+togglePower()
 
 // --- Event handler setup --------------------------------
 
@@ -66,19 +67,7 @@ click($dataEditorSaveButton, function() {
   })
 })
 
-click($powerSwitch, function() {
-  urlToOpen = null
-  contentToDisplayInNewWindow = null
-  if (groveWorker) {
-    // turn off
-    groveWorker.terminate()
-    groveWorker = null
-    redraw([], true)
-  } else {
-    // turn on
-    groveWorker = GroveWorker(dataRecords, handleMessageFromWorker)
-  }
-})
+click($powerSwitch, togglePower)
 
 window.addEventListener('beforeunload', function(e) {
   if (shouldWarnAboutUnsavedChanges()) {
@@ -117,6 +106,24 @@ window.addEventListener('keyup', function(e) {
 })
 
 // --- Function definitions -------------------------------
+
+function togglePower () {
+  urlToOpen = null
+  contentToDisplayInNewWindow = null
+  if (groveWorker) {
+    // turn off
+    groveWorker.terminate()
+    groveWorker = null
+    $display.setAttribute('class', '')
+    redraw([], true)
+  } else {
+    // turn on
+    $display.setAttribute('class', 'power-on')
+    groveWorker = GroveWorker(
+      dataRecords,
+      handleMessageFromWorker)
+  }
+}
 
 function handleMessageFromWorker(msg) {
   switch (msg.data.type) {
@@ -158,7 +165,7 @@ function setTitleTo(title) {
 }
 
 var previouslyDrawn = []
-var lineElements = $('#terminal p')
+var lineElements = $('#display p')
 function redraw(text, force) {
   for (var i = 0; i < lineElements.length; i++) {
     var toDraw = text[i] || ''
