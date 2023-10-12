@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Druidic Grove</title>
+    <style type="text/css">
+#include src/fonts.css
+#include src/index.css
+    </style>
+    <script>
+#include src/fileSaver.js
+    </script>
+  </head>
+
+  <body>
+    <div id="case">
+      <div id="bezel">
+        <div id="display">
+          <div class="rendering-layer">
+            <p id="l0">Initializing... </p>
+            <p id="l1"></p>
+            <p id="l2"></p>
+            <p id="l3"></p>
+            <p id="l4"></p>
+            <p id="l5"></p>
+            <p id="l6"></p>
+            <p id="l7"></p>
+            <p id="l8"></p>
+            <p id="l9"></p>
+            <p id="l10"></p>
+            <p id="l11"></p>
+            <p id="l12"></p>
+            <p id="l13"></p>
+            <p id="l14"></p>
+            <p id="l15"></p>
+            <p id="l16"></p>
+            <p id="l17"></p>
+            <p id="l18"></p>
+            <p id="l19"></p>
+            <p id="l20"></p>
+            <p id="l21"></p>
+            <p id="l22"></p>
+            <p id="l23"></p>
+            <p id="l24"></p>
+            <p id="l25"></p>
+            <p id="l26"></p>
+            <p id="l27"></p>
+            <p id="l28"></p>
+            <p id="l29"></p>
+            <p id="l30"></p>
+            <p id="l31"></p>
+          </div>
+        </div>
+      </div>
+      <div id="controls">
+        <div id="power-switch" title="Toggle power">0/1</div>
+        <div id="slot" title="Save a copy"></div>
+        <div id="load-data-button" title="Load data"></div>
+      </div>
+    </div>
+
+    <div id="overlay">
+      <div id="load-data-modal">
+        <div class="close-button">
+          <div class="title">
+            Load Data
+          </div>
+          <button>x</button>
+        </div>
+        <div class="data-record-selector">
+          <input type="text" tabindex="1">
+          <button class="save" tabindex="3">Save</button>
+        </div>
+
+        <textarea tabindex="2"></textarea>
+      </div>
+    </div>
+
+    <script id="records">
+
+    var RECORDS = {}
+
+    </script>
+
+    <!-- this script gets run in a web worker -->
+    <script type="dont-run-in-main-thread" id="grove-worker">
+"use strict";
+#include .build-tmp/worker.js
+    </script>
+    <script>
+"use strict";
+#include .build-tmp/ui.js
+    </script>
+  </body>
+</html>
